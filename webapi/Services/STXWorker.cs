@@ -32,7 +32,7 @@ namespace STX.Sdk.Api.Services
             STXTokens tokens = m_TokenService.Tokens;
 
             List<STXSportAndCompetitions> sportsAndComps = await m_MarketService.GetSportAndCompetitionsAsync();
-            STXMarketInfosResponse<STXMarketInfo> markets = await m_MarketService.GetMarketInfosAsync(new STXMarketInfosFilter
+            STXMarketInfosWithCountResponse<STXMarketInfo> markets = await m_MarketService.GetMarketInfosWithCountAsync(new STXMarketInfosFilter
             {
                 Sports = sportsAndComps.Select(s => s.Sport).ToList(),
                 Competitions = sportsAndComps.SelectMany(s => s.Competitions).ToList(),

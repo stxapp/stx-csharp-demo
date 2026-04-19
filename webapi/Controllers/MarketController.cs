@@ -47,10 +47,10 @@ namespace STX.Sdk.Api.Controllers
         /// </summary>
         /// <returns>All market info</returns>
         [HttpGet]
-        [ProducesResponseType(typeof(STXMarketInfosResponse<STXMarketInfo>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(STXMarketInfosWithCountResponse<STXShortMarketInfo>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetMarketsInfo()
         {
-            var result = await _marketService.GetShortMarketInfosAsync(new List<string> { "ed131718-3f2b-4fcf-a2ea-c04bf55fd6ed", "c022b034-85b0-4a55-81aa-852f5e832bba", "2a7912e2-62e1-4d8d-bfa4-2c8aab7423ca" });
+            var result = await _marketService.GetShortMarketInfosWithCountAsync(new List<string> { "ed131718-3f2b-4fcf-a2ea-c04bf55fd6ed", "c022b034-85b0-4a55-81aa-852f5e832bba", "2a7912e2-62e1-4d8d-bfa4-2c8aab7423ca" });
 
             result.MarketInfos = result.MarketInfos
                 .Take(50)
@@ -64,7 +64,7 @@ namespace STX.Sdk.Api.Controllers
         /// </summary>
         /// <returns>All market info</returns>
         [HttpGet("nba")]
-        [ProducesResponseType(typeof(STXMarketInfosResponse<STXMarketInfo>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(STXMarketInfosWithCountResponse<STXMarketInfo>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetMarketsInfoOnlyNba()
         {
             var filter = new STXMarketInfosFilter
@@ -73,7 +73,7 @@ namespace STX.Sdk.Api.Controllers
                 Competitions = new List<string>() { "NBA" }
             };
 
-            var result = await _marketService.GetMarketInfosAsync(filter);
+            var result = await _marketService.GetMarketInfosWithCountAsync(filter);
 
             result.MarketInfos = result.MarketInfos
                 .Take(50)
@@ -87,10 +87,10 @@ namespace STX.Sdk.Api.Controllers
         /// </summary>
         /// <returns>Custom market info</returns>
         [HttpGet("generic")]
-        [ProducesResponseType(typeof(STXMarketInfosResponse<SimpleMarketInfo>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(STXMarketInfosWithCountResponse<SimpleMarketInfo>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetMarketsInfoGeneric()
         {
-            var result = await _marketService.GetMarketInfosAsync<SimpleMarketInfo>();
+            var result = await _marketService.GetMarketInfosWithCountAsync<SimpleMarketInfo>();
 
             result.MarketInfos = result.MarketInfos
                 .Take(50)
