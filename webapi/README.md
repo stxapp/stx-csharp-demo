@@ -17,7 +17,7 @@ Two environment variables are read at startup. Staging values shown:
 
 ```bash
 export GRAPHQL_URI="https://api-staging.on.sportsxapp.com/api/graphql"
-export CHANNELS_URI="wss://api-staging.on.sportsxapp.com/socket/websocket"
+export CHANNELS_URI="wss://api-staging.on.sportsxapp.com/socket/websocket?token={0}&vsn=2.0.0"
 ```
 
 Credentials are not taken from the environment — this is an API; callers authenticate via the `/api/Login` endpoint (see below).
@@ -77,7 +77,7 @@ Each controller maps to one SDK surface:
 docker build -t stx-csharp-webapi .
 docker run -p 8080:8080 \
   -e GRAPHQL_URI="https://api-staging.on.sportsxapp.com/api/graphql" \
-  -e CHANNELS_URI="wss://api-staging.on.sportsxapp.com/socket/websocket" \
+  -e CHANNELS_URI="wss://api-staging.on.sportsxapp.com/socket/websocket?token={0}&vsn=2.0.0" \
   stx-csharp-webapi
 ```
 

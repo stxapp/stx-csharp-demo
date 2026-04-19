@@ -4,8 +4,6 @@
     "Console": {
       "commandName": "Project",
       "environmentVariables": {
-        "EMAIL": "email",
-        "PASSWORD": "password",
         "GRAPHQL_URI": "https://api-staging.on.sportsxapp.com/api/graphql",
         "CHANNELS_URI": "wss://api-staging.on.sportsxapp.com/socket/websocket?token={0}&vsn=2.0.0"
       }

@@ -67,15 +67,17 @@ namespace STX.Sdk.Console
 
             STXTokens tokens = m_TokenService.Tokens;
 
-            // Pull up to 50 currently-open markets. The in-memory filter below
-            // narrows to open + pre-open so the loop only places orders on
-            // markets that accept them.
+            // Pull up to 50 markets; the in-memory filter below narrows to
+            // open + pre-open so the loop only places orders on markets
+            // that accept them.
+            //
+            // Note: we intentionally do NOT pass Status= here. STX.Sdk 1.4.2
+            // declares $status as scalar StatusEnum in the GraphQL query but
+            // the server expects [StatusEnum]; passing Status triggers a
+            // server-side type error and the SDK NREs on the null response.
+            // Tracked as an SDK bug; remove this note once the SDK is fixed.
             STXMarketInfosWithCountResponse<STXMarketInfo> markets = await m_MarketService.GetMarketInfosWithCountAsync(
-                new STXMarketInfosFilter
-                {
-                    Status = STXMarketInfosStatus.OPEN,
-                    Limit = 50,
-                });
+                new STXMarketInfosFilter { Limit = 50 });
 
             m_MarketChannel.SetOnReceiveAction(MarketReceive);
             await m_MarketChannel.StartAsync();

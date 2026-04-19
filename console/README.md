@@ -19,7 +19,7 @@ The app reads four environment variables. Staging values shown; swap the host fo
 export EMAIL="you@example.com"
 export PASSWORD="your-password"
 export GRAPHQL_URI="https://api-staging.on.sportsxapp.com/api/graphql"
-export CHANNELS_URI="wss://api-staging.on.sportsxapp.com/socket/websocket"
+export CHANNELS_URI="wss://api-staging.on.sportsxapp.com/socket/websocket?token={0}&vsn=2.0.0"
 ```
 
 <details>
