@@ -24,7 +24,7 @@ Pick the pattern you want and jump into its folder:
 # Console worker
 cd console
 export EMAIL="you@example.com" PASSWORD="your-password"
-export GRAPHQL_URI="https://api-staging.on.sportsxapp.com/graphql"
+export GRAPHQL_URI="https://api-staging.on.sportsxapp.com/api/graphql"
 export CHANNELS_URI="wss://api-staging.on.sportsxapp.com/socket/websocket"
 dotnet run
 ```
@@ -32,7 +32,7 @@ dotnet run
 ```bash
 # Web API (in a different shell)
 cd webapi
-export GRAPHQL_URI="https://api-staging.on.sportsxapp.com/graphql"
+export GRAPHQL_URI="https://api-staging.on.sportsxapp.com/api/graphql"
 export CHANNELS_URI="wss://api-staging.on.sportsxapp.com/socket/websocket"
 dotnet run
 # Open http://localhost:5088/swagger for the UI
@@ -46,10 +46,10 @@ Both projects take endpoints as env vars so you can switch environments without 
 
 | Env | GraphQL | Channels |
 |---|---|---|
-| production | `https://api.on.sportsxapp.com/graphql` | `wss://api.on.sportsxapp.com/socket/websocket` |
-| staging | `https://api-staging.on.sportsxapp.com/graphql` | `wss://api-staging.on.sportsxapp.com/socket/websocket` |
-| dev | `https://api-dev.on.sportsxapp.com/graphql` | `wss://api-dev.on.sportsxapp.com/socket/websocket` |
-| qa | `https://api-qa.on.sportsxapp.com/graphql` | `wss://api-qa.on.sportsxapp.com/socket/websocket` |
+| production | `https://api.on.sportsxapp.com/api/graphql` | `wss://api.on.sportsxapp.com/socket/websocket` |
+| staging | `https://api-staging.on.sportsxapp.com/api/graphql` | `wss://api-staging.on.sportsxapp.com/socket/websocket` |
+| dev | `https://api-dev.on.sportsxapp.com/api/graphql` | `wss://api-dev.on.sportsxapp.com/socket/websocket` |
+| qa | `https://api-qa.on.sportsxapp.com/api/graphql` | `wss://api-qa.on.sportsxapp.com/socket/websocket` |
 
 ## Docs
 
