@@ -67,13 +67,14 @@ namespace STX.Sdk.Console
 
             STXTokens tokens = m_TokenService.Tokens;
 
-            List<STXSportAndCompetitions> sportsAndComps = await m_MarketService.GetSportAndCompetitionsAsync();
-            STXMarketInfoResponse<STXMarketInfo> markets = await m_MarketService.GetMarketsInfoAsync(
-                new STXMarketInfoFilter
+            // Pull up to 50 currently-open markets. The in-memory filter below
+            // narrows to open + pre-open so the loop only places orders on
+            // markets that accept them.
+            STXMarketInfosWithCountResponse<STXMarketInfo> markets = await m_MarketService.GetMarketInfosWithCountAsync(
+                new STXMarketInfosFilter
                 {
-                    FromTime = DateTime.UtcNow,
-                    ToTime = DateTime.UtcNow.AddDays(7),
-                    SportAndCompetitions = sportsAndComps,
+                    Status = STXMarketInfosStatus.OPEN,
+                    Limit = 50,
                 });
 
             m_MarketChannel.SetOnReceiveAction(MarketReceive);

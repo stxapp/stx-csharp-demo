@@ -43,9 +43,9 @@ namespace STX.Sdk.Api.Controllers
         public async Task<IActionResult> GetPortfolio()
         {
             //first set channel for use
-            await _portfolioChannelWrapper.SetChannelAsync();
+            //await _portfolioChannelWrapper.SetChannelAsync();
             //second start accepting data through channel
-            _portfolioChannelWrapper.StartAsync();
+            await _portfolioChannelWrapper.StartAsync();
 
             while (_portfolioChannelWrapper.LastItem == null)
             {

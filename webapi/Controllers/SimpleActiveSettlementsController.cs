@@ -43,9 +43,9 @@ namespace STX.Sdk.Api.Controllers
         public async Task<IActionResult> GetActiveSettlements()
         {
             //first set channel for use
-            await _activeSettlementsChannelWrapper.SetChannelAsync();
+            //await _activeSettlementsChannelWrapper.SetChannelAsync();
             //second start accepting data through channel
-            _activeSettlementsChannelWrapper.StartAsync();
+            await _activeSettlementsChannelWrapper.StartAsync();
 
             while (_activeSettlementsChannelWrapper.LastItem == null)
             {

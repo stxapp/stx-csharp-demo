@@ -10,4 +10,9 @@ namespace STX.Sdk.Api.Models
         public STXOrderAction Action { get; set; }
         public STXOrderType OrderType { get; set; }
     }
+
+    public class ConfirmOrdersModel
+    {
+        public List<ConfirmOrderModel> ConfirmOrderModels { get; set; }
+    }
 }

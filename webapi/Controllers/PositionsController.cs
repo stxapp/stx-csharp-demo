@@ -43,7 +43,7 @@ namespace STX.Sdk.Api.Controllers
         public async Task<IActionResult> GetPositions()
         {
             //first set channel for use
-            await _positionsChannelWrapper.SetChannelAsync();
+            //await _positionsChannelWrapper.SetChannelAsync();
             //second start accepting data through channel
             await _positionsChannelWrapper.StartAsync();
 

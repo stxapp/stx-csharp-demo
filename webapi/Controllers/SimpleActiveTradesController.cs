@@ -43,9 +43,9 @@ namespace STX.Sdk.Api.Controllers
         public async Task<IActionResult> GetActiveTrades()
         {
             //first set channel for use
-            await _activeTradesChannelWrapper.SetChannelAsync();
+            //await _activeTradesChannelWrapper.SetChannelAsync();
             //second start accepting data through channel
-            _activeTradesChannelWrapper.StartAsync();
+            await _activeTradesChannelWrapper.StartAsync();
 
             while (_activeTradesChannelWrapper.LastItem == null)
             {
