@@ -1,0 +1,96 @@
+name: Bug report
+description: Something in this demo isn't working (console or webapi).
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a report. Please fill in the sections below so the maintainers can reproduce quickly.
+
+        **If your problem is with the STX SDK itself (not this demo), report it against the SDK package instead of here.**
+
+  - type: dropdown
+    id: project
+    attributes:
+      label: Which project?
+      options:
+        - console
+        - webapi
+        - both
+        - neither (infra / docs / repo-level)
+    validations:
+      required: true
+
+  - type: input
+    id: env
+    attributes:
+      label: Environment
+      description: Which STX environment were you pointed at?
+      placeholder: staging
+    validations:
+      required: true
+
+  - type: input
+    id: dotnet
+    attributes:
+      label: .NET SDK version
+      description: Output of `dotnet --version`.
+      placeholder: "8.0.403"
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: OS + arch
+      placeholder: "macOS 15.0 arm64 / Ubuntu 22.04 x64 / Windows 11 x64"
+    validations:
+      required: true
+
+  - type: input
+    id: stxsdk
+    attributes:
+      label: STX.Sdk version
+      description: Check `dotnet list <project>/ package` or the `.csproj`.
+      placeholder: "1.4.2"
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Exact commands / env vars / config.
+      placeholder: |
+        1. export EMAIL=... PASSWORD=... GRAPHQL_URI=... CHANNELS_URI=...
+        2. cd console && dotnet run
+        3. ...
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behaviour
+      description: What happened, including error output / stack traces.
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+      description: What you thought would happen.
+    validations:
+      required: true
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else?
+      description: Logs, screenshots, workarounds you've tried.
+    validations:
+      required: false
