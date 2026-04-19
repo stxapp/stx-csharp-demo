@@ -42,8 +42,8 @@ namespace STX.Sdk.Api.Controllers
         [ProducesResponseType(typeof(STXActiveOrders), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetActiveOrders()
         {
-            await _activeOrdersChannelWrapper.SetChannelAsync();
-            _activeOrdersChannelWrapper.StartAsync();
+            //await _activeOrdersChannelWrapper.SetChannelAsync();
+            await _activeOrdersChannelWrapper.StartAsync();
 
             while (_activeOrdersChannelWrapper.LastItem == null)
             {

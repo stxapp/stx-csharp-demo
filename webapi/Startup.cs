@@ -1,8 +1,3 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using STX.Sdk.Api.Services;
 
@@ -22,8 +17,8 @@ namespace STX.Sdk.Api
         {
             // Add STX Services to service collection (to DI container)
             services.ConfigureSTXServices(
-                graphQLUri: "https://in-api-qa.stxapp.io/graphiql", 
-                channelsUri: "wss://in-api-qa.stxapp.io/socket/websocket?token={0}&vsn=2.0.0");
+                (s) => Environment.GetEnvironmentVariable("GRAPHQL_URI"),
+                (s) => Environment.GetEnvironmentVariable("CHANNELS_URI"));
 
             //Add simple services
             services.AddSingleton<SimpleActiveOrdersChannelWrapper>();
@@ -33,6 +28,8 @@ namespace STX.Sdk.Api
             services.AddSingleton<SimplePortfolioChannelWrapper>();
             services.AddSingleton<SimplePositionsChannelWrapper>();
             services.AddSingleton<SimpleUserInfoChannelWrapper>();
+
+            services.AddTransient<STXWorker>();
 
             services.AddControllers();
 

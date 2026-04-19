@@ -32,7 +32,7 @@ namespace STX.Sdk.Api.Services
             _queue.Enqueue(item);
         }
 
-        public async Task SetChannelAsync() => await _activeOrdersChannel.SetChannelAsync();
+        //public async Task SetChannelAsync() => await _activeOrdersChannel.SetChannelAsync();
 
         public async Task StartAsync() => await _activeOrdersChannel.StartAsync();
 
