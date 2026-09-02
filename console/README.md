@@ -22,18 +22,10 @@ export GRAPHQL_URI="https://api-staging.on.sportsxapp.com/api/graphql"
 export CHANNELS_URI="wss://api-staging.on.sportsxapp.com/socket/websocket?token={0}&vsn=2.0.0"
 ```
 
-<details>
-<summary>Host table</summary>
-
-| Env | Host |
-|---|---|
-| production | `api.on.sportsxapp.com` |
-| staging | `api-staging.on.sportsxapp.com` |
-| dev | `api-dev.on.sportsxapp.com` |
-| qa | `api-qa.on.sportsxapp.com` |
-
-Replace the host in both `GRAPHQL_URI` and `CHANNELS_URI`.
-</details>
+Other environments: the canonical host list lives at
+[docs.stxapp.io/environments](https://docs.stxapp.io/environments/). Take the base URL
+for the environment you want and replace the host in both `GRAPHQL_URI` and
+`CHANNELS_URI`.
 
 ### 3. Run
 

@@ -1,0 +1,84 @@
+name: Build
+
+# These samples have no credentials in CI, so this builds them rather than running
+# them. That is enough to catch the failure mode this repo actually has: the pinned
+# STX.Sdk version going stale or breaking against a newer SDK.
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  # Weekly, so a pin that has fallen behind is caught here rather than by someone
+  # cloning the repo and hitting a runtime error.
+  schedule:
+    - cron: '23 7 * * 1'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  DOTNET_VERSION: '8.0.x'
+
+jobs:
+  build:
+    name: build (${{ matrix.project }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - project: console
+            path: console/STXConsoleApp.csproj
+          - project: webapi
+            path: webapi/STX.Sdk.Api.csproj
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore
+        run: dotnet restore ${{ matrix.path }}
+
+      - name: Build
+        run: dotnet build ${{ matrix.path }} --configuration Release --no-restore
+
+  # The pin is what went stale last time: both projects sat on 1.4.2 while the SDK
+  # shipped 1.5.0 and 1.5.1, and 1.4.2 crashes on market results it cannot model.
+  # A build alone would not have caught that, since 1.4.2 still compiles.
+  sdk-version:
+    name: SDK pin is current
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compare pinned STX.Sdk against the latest published version
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          latest=$(curl -sS https://api.nuget.org/v3-flatcontainer/stx.sdk/index.json \
+            | python3 -c 'import json,sys; print(json.load(sys.stdin)["versions"][-1])')
+          echo "Latest published STX.Sdk: $latest"
+
+          rc=0
+          while IFS= read -r csproj; do
+            pinned=$(grep -oE '"STX\.Sdk" Version="[^"]+"' "$csproj" \
+              | sed -E 's/.*Version="([^"]+)".*/\1/')
+            [ -n "$pinned" ] || continue
+            if [ "$pinned" = "$latest" ]; then
+              echo "ok       $csproj pins $pinned"
+            else
+              echo "::error file=$csproj::pins STX.Sdk $pinned but $latest is published. Bump it — a stale pin means these samples demonstrate an SDK our users are not on, and older versions can fail at runtime on data newer ones handle."
+              rc=1
+            fi
+          done < <(find . -name '*.csproj' -not -path './.git/*')
+
+          exit $rc
