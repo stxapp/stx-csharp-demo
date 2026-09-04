@@ -30,7 +30,7 @@ namespace STX.Sdk.Api.Controllers
         }
 
         /// <summary>
-        /// Method calls STXProfileService method GetSportAndCompetitions responsible getting all sports and competitions.
+        /// Method calls STXMarketService method GetSportAndCompetitionsAsync, returning all sports and competitions.
         /// </summary>
         /// <returns>All market info</returns>
         [HttpGet("sports-and-competitions")]
@@ -43,7 +43,7 @@ namespace STX.Sdk.Api.Controllers
         }
 
         /// <summary>
-        /// Method calls STXProfileService method GetMarketInfoAsync responsible getting all market info.
+        /// Method calls STXMarketService to return market info.
         /// </summary>
         /// <returns>All market info</returns>
         [HttpGet]
@@ -60,7 +60,7 @@ namespace STX.Sdk.Api.Controllers
         }
 
         /// <summary>
-        /// Method calls STXProfileService method GetMarketInfoAsync responsible getting all market info.
+        /// Method calls STXMarketService to return market info.
         /// </summary>
         /// <returns>All market info</returns>
         [HttpGet("nba")]
@@ -83,7 +83,7 @@ namespace STX.Sdk.Api.Controllers
         }
 
         /// <summary>
-        /// Method calls STXProfileService genetic method GetMarketInfoAsync responsible getting custom market info.
+        /// Method calls the generic STXMarketService overload to return a custom market projection.
         /// </summary>
         /// <returns>Custom market info</returns>
         [HttpGet("generic")]

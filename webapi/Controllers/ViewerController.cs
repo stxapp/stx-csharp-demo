@@ -11,34 +11,34 @@ namespace STX.Sdk.Api.Controllers
     /// Controler used for testing STX GraphQL userProfile endpoint.
     /// </summary>
     [ApiController]
-    [Route("profile")]
-    public class ProfileController : ControllerBase
+    [Route("me")]
+    public class ViewerController : ControllerBase
     {
-        private readonly STXProfileService _profileService;
+        private readonly STXViewerService _viewerService;
         private readonly ILogger _logger;
 
         /// <summary>
         /// Constructor for TokenController.
         /// </summary>
-        /// <param name="profileService">STXProfileService passed through DI container</param>
+        /// <param name="viewerService">STXViewerService passed through DI container</param>
         /// <param name="logger">Logger</param>
-        public ProfileController(
-            STXProfileService profileService,
+        public ViewerController(
+            STXViewerService viewerService,
             ILogger<LoginController> logger)
         {
-            _profileService = profileService;
+            _viewerService = viewerService;
             _logger = logger;
         }
 
         /// <summary>
-        /// Method calls STXProfileService GetProfileAsync responsible getting user profile data.
+        /// Returns who the current credentials belong to and what they may do.
         /// </summary>
-        /// <returns>User profile data</returns>
+        /// <returns>User id, account id, name, auth method and scope</returns>
         [HttpGet]
-        [ProducesResponseType(typeof(STXUserProfile), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetProfile()
+        [ProducesResponseType(typeof(STXViewer), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetMe()
         {
-            var result = await _profileService.GetProfileAsync();
+            var result = await _viewerService.GetMeAsync();
 
             return Ok(result);
         }

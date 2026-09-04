@@ -1,3 +1,4 @@
+﻿using StxDemo;
 using Microsoft.OpenApi.Models;
 using STX.Sdk.Api.Services;
 
@@ -16,9 +17,8 @@ namespace STX.Sdk.Api
         public void ConfigureServices(IServiceCollection services)
         {
             // Add STX Services to service collection (to DI container)
-            services.ConfigureSTXServices(
-                (s) => Environment.GetEnvironmentVariable("GRAPHQL_URI"),
-                (s) => Environment.GetEnvironmentVariable("CHANNELS_URI"));
+            // Picks API-key or email/password based on the environment. See shared/StxAuth.cs.
+            services.AddStx();
 
             //Add simple services
             services.AddSingleton<SimpleActiveOrdersChannelWrapper>();

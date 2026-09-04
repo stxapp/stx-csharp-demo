@@ -40,6 +40,31 @@ dotnet run
 
 See [`console/README.md`](./console/README.md) and [`webapi/README.md`](./webapi/README.md) for the full per-project quickstarts, host tables for other envs, and notes on what each sample does.
 
+## Authentication
+
+Two options, and both samples support either. Set the environment variables for the one you want.
+
+**API key (recommended).** Requests are signed per call with Ed25519. There is no login, no
+token to expire and no refresh cycle, so a restart or an API deployment cannot leave you
+without a session. Create a key under Account, API Keys.
+
+```bash
+export STX_API_KEY_ID="your-key-id"
+export STX_API_KEY_PEM_PATH="$HOME/.stx/ontario-staging.pem"
+```
+
+**Email and password.** Still fully supported.
+
+```bash
+export EMAIL="you@example.com" PASSWORD="your-password"
+```
+
+Keep the private key out of source control, and pass a path rather than pasting the key into
+an environment variable so it never lands in your shell history or process list.
+
+Note that `userProfile` is not reachable with an API key, by design: it returns SSN, date of
+birth and address. Use `me` for identity, which is what the `/me` endpoint shows.
+
 ## Environments
 
 Both projects take endpoints as env vars, so you switch environments without code changes.
