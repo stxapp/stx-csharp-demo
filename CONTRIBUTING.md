@@ -26,10 +26,9 @@ Before opening a PR:
 dotnet build console/
 dotnet build webapi/
 
-# If your change affects a sample, run it against staging once:
-export EMAIL=... PASSWORD=... \
-       GRAPHQL_URI=https://api-staging.on.sportsxapp.com/api/graphql \
-       CHANNELS_URI=wss://api-staging.on.sportsxapp.com/socket/websocket
+# If your change affects a sample, run it against a demo environment once:
+export STX_ENV=ontario-demo
+export STX_API_KEY_ID=... STX_API_KEY_PEM_PATH=~/.stx/ontario.pem   # or EMAIL=... PASSWORD=...
 cd console && dotnet run    # or: cd webapi && dotnet run
 ```
 

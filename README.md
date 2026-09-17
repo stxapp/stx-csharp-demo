@@ -24,16 +24,14 @@ Pick the pattern you want and jump into its folder:
 # Console worker
 cd console
 export EMAIL="you@example.com" PASSWORD="your-password"
-export GRAPHQL_URI="https://api-staging.on.sportsxapp.com/api/graphql"
-export CHANNELS_URI="wss://api-staging.on.sportsxapp.com/socket/websocket?token={0}&vsn=2.0.0"
+export STX_ENV="ontario-demo"
 dotnet run
 ```
 
 ```bash
 # Web API (in a different shell)
 cd webapi
-export GRAPHQL_URI="https://api-staging.on.sportsxapp.com/api/graphql"
-export CHANNELS_URI="wss://api-staging.on.sportsxapp.com/socket/websocket?token={0}&vsn=2.0.0"
+export STX_ENV="ontario-demo"
 dotnet run
 # Open http://localhost:5088/swagger for the UI
 ```
@@ -67,23 +65,24 @@ birth and address. Use `me` for identity, which is what the `/me` endpoint shows
 
 ## Environments
 
-Both projects take endpoints as env vars, so you switch environments without code changes.
+The SDK carries the hosts, so there are no URLs to assemble. Pick one with `STX_ENV`:
 
-The canonical list of hosts — US and Ontario, integration and production — lives in the
-docs and is verified against live DNS on every docs build:
-
-**[docs.stxapp.io/environments](https://docs.stxapp.io/environments/)**
-
-Take the base URL for the environment you want and append the two paths:
-
-| Variable | Path to append |
+| `STX_ENV` | |
 |---|---|
-| `GRAPHQL_URI` | `/api/graphql` |
-| `CHANNELS_URI` | `/socket/websocket?token={0}&vsn=2.0.0` (scheme becomes `wss://`) |
+| `ontario-demo` (default) | Ontario, no real money |
+| `ontario-production` | Ontario, **live money** |
+| `us-demo` | United States, no real money |
 
-The quickstart above uses the Ontario integration host. If you are integrating with the
-US exchange, use the US integration base URL from that page instead — accounts and API
-keys do not carry across exchanges.
+```bash
+export STX_ENV="ontario-demo"
+```
+
+Accounts and API keys do not carry across exchanges: a key issued for Ontario will not
+authenticate against the US exchange. The canonical host list, if you need it, is at
+[docs.stxapp.io/environments](https://docs.stxapp.io/environments/).
+
+To point a sample somewhere the SDK does not name, set `GRAPHQL_URI` and `CHANNELS_URI`
+instead and they take precedence.
 
 ## Docs
 
