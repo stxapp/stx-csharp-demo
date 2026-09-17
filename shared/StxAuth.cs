@@ -65,7 +65,7 @@ namespace StxDemo
             {
                 "ontario-demo"       => STXEnvironment.OntarioDemo,
                 "ontario-production" => STXEnvironment.OntarioProduction,
-                "us-demo"            => STXEnvironment.UnitedStatesDemo,
+                "us-demo"            => STXEnvironment.USDemo,
                 var other => throw new InvalidOperationException(
                     $"Unknown STX_ENV '{other}'. Use ontario-demo, ontario-production or "
                     + "us-demo, or set GRAPHQL_URI and CHANNELS_URI for anything else.")
