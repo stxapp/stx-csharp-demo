@@ -29,6 +29,9 @@ namespace STX.Sdk.Api
             services.AddSingleton<SimplePositionsChannelWrapper>();
             services.AddSingleton<SimpleUserInfoChannelWrapper>();
 
+            // Resolve the API key's user id before any user-scoped channel is asked for.
+            services.AddHostedService<StxIdentityWarmup>();
+
             services.AddTransient<STXWorker>();
 
             services.AddControllers();

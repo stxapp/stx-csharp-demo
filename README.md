@@ -9,12 +9,13 @@ Two integration patterns, each self-contained in its own folder:
 | [`console/`](./console) | Long-running background worker using `Microsoft.Extensions.Hosting`. Subscribes to channels, reacts to market events, places orders. | Market-maker bots, scheduled jobs, anything that runs 24/7 without HTTP. |
 | [`webapi/`](./webapi) | ASP.NET Core 8 Web API that wraps the SDK behind REST endpoints, with Swagger UI. | Backends, internal tools, any service that needs to expose SDK functionality over HTTP. |
 
-Both projects target **.NET 8** (LTS) and depend on `STX.Sdk 1.5.1+` from NuGet. Each has its own README with a full quickstart — this page is the overview.
+Both projects target **.NET 8** (LTS) and depend on `STX.Sdk 1.6.0` from NuGet. Each has its own README with a full quickstart — this page is the overview.
 
 ## Prerequisites
 
 - [.NET SDK 8.0](https://dotnet.microsoft.com/download/dotnet/8.0) or newer
-- An STX account on the environment you plan to target (staging recommended for first runs)
+- An STX account on the environment you plan to target, and an API key from Account, API Keys.
+  The samples default to the Ontario demo environment, which uses no real money.
 
 ## 60-second quickstart
 
@@ -23,10 +24,14 @@ Pick the pattern you want and jump into its folder:
 ```bash
 # Console worker
 cd console
-export EMAIL="you@example.com" PASSWORD="your-password"
+export STX_API_KEY_ID="your-key-id"
+export STX_API_KEY_PEM_PATH="$HOME/.stx/ontario-demo.pem"
 export STX_ENV="ontario-demo"
 dotnet run
 ```
+
+The console worker cancels your resting orders and places new ones, so point it at a
+demo environment until you have read what it does.
 
 ```bash
 # Web API (in a different shell)
