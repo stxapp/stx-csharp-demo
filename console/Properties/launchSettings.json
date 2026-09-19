@@ -2,10 +2,7 @@
   "$schema": "http://json.schemastore.org/launchsettings.json",
   "profiles": {
     "Console": {
-      "commandName": "Project",
-      "environmentVariables": {
-        "STX_ENV": "ontario-demo"
-      }
+      "commandName": "Project"
     }
   }
 }
