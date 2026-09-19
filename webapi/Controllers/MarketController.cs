@@ -17,7 +17,7 @@ namespace STX.Sdk.Api.Controllers
         private readonly ILogger _logger;
 
         /// <summary>
-        /// Constructor for TokenController.
+        /// Constructor for MarketController.
         /// </summary>
         /// <param name="marketService">STXMarketService passed through DI container</param>
         /// <param name="logger">Logger</param>
@@ -30,7 +30,7 @@ namespace STX.Sdk.Api.Controllers
         }
 
         /// <summary>
-        /// Method calls STXProfileService method GetSportAndCompetitions responsible getting all sports and competitions.
+        /// Method calls STXMarketService method GetSportAndCompetitionsAsync, returning all sports and competitions.
         /// </summary>
         /// <returns>All market info</returns>
         [HttpGet("sports-and-competitions")]
@@ -43,7 +43,7 @@ namespace STX.Sdk.Api.Controllers
         }
 
         /// <summary>
-        /// Method calls STXProfileService method GetMarketInfoAsync responsible getting all market info.
+        /// Method calls STXMarketService to return market info.
         /// </summary>
         /// <returns>All market info</returns>
         [HttpGet]
@@ -60,7 +60,7 @@ namespace STX.Sdk.Api.Controllers
         }
 
         /// <summary>
-        /// Method calls STXProfileService method GetMarketInfoAsync responsible getting all market info.
+        /// Method calls STXMarketService to return market info.
         /// </summary>
         /// <returns>All market info</returns>
         [HttpGet("nba")]
@@ -83,18 +83,19 @@ namespace STX.Sdk.Api.Controllers
         }
 
         /// <summary>
-        /// Method calls STXProfileService genetic method GetMarketInfoAsync responsible getting custom market info.
+        /// Method calls the generic STXMarketService overload to return a custom market projection.
         /// </summary>
         /// <returns>Custom market info</returns>
         [HttpGet("generic")]
         [ProducesResponseType(typeof(STXMarketInfosWithCountResponse<SimpleMarketInfo>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetMarketsInfoGeneric()
         {
-            var result = await _marketService.GetMarketInfosWithCountAsync<SimpleMarketInfo>();
-
-            result.MarketInfos = result.MarketInfos
-                .Take(50)
-                .ToList();
+            // Limit server-side. Asking for every market and calling Take(50) afterwards
+            // makes the server assemble the whole set first, which times out at the
+            // gateway on a populated environment - and throws away the payload saving
+            // the generic overload exists to give you.
+            var result = await _marketService.GetMarketInfosWithCountAsync<SimpleMarketInfo>(
+                new STXMarketInfosFilter { Limit = 50 });
 
             return Ok(result);
         }

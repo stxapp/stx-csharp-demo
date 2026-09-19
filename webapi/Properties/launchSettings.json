@@ -16,9 +16,7 @@
       "launchUrl": "swagger",
       "applicationUrl": "http://localhost:5088",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "GRAPHQL_URI": "https://api-staging.on.sportsxapp.com/api/graphql",
-        "CHANNELS_URI": "wss://api-staging.on.sportsxapp.com/socket/websocket?token={0}&vsn=2.0.0"
+        "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
     "https": {
@@ -28,9 +26,7 @@
       "launchUrl": "swagger",
       "applicationUrl": "https://localhost:7036;http://localhost:5088",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "GRAPHQL_URI": "https://api-staging.on.sportsxapp.com/api/graphql",
-        "CHANNELS_URI": "wss://api-staging.on.sportsxapp.com/socket/websocket?token={0}&vsn=2.0.0"
+        "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
     "IIS Express": {
@@ -38,9 +34,7 @@
       "launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "GRAPHQL_URI": "https://api-staging.on.sportsxapp.com/api/graphql",
-        "CHANNELS_URI": "wss://api-staging.on.sportsxapp.com/socket/websocket?token={0}&vsn=2.0.0"
+        "ASPNETCORE_ENVIRONMENT": "Development"
       }
     }
   }

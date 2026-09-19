@@ -15,7 +15,6 @@ namespace STX.Sdk.Api.Models
         public DateTime? LastProbabilityAt { get; set; }
         public DateTime? EventStart { get; set; }
         public string EventStatus { get; set; }
-        public DateTime? ClosedAt { get; set; }
         public int? LastTradedPrice { get; set; }
         public string Result { get; set; }
         public Guid EventId { get; set; }

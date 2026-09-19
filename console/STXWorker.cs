@@ -9,8 +9,8 @@ namespace STX.Sdk.Console
 {
     public class STXWorker
     {
-        private readonly STXLoginService m_LoginService;
         private readonly STXTokenService m_TokenService;
+        private readonly STXViewerService m_ViewerService;
         private readonly STXMarketService m_MarketService;
         private readonly STXOrderService m_OrderService;
         private readonly STXMarketChannel m_MarketChannel;
@@ -31,8 +31,8 @@ namespace STX.Sdk.Console
         private readonly ICollection<STXMarketStatus> _openMarketStatuses = new[] { STXMarketStatus.open, STXMarketStatus.pre_open };
 
         public STXWorker(
-            STXLoginService loginService,
             STXTokenService tokenService,
+            STXViewerService viewerService,
             STXMarketService marketService,
             STXOrderService orderService,
             STXMarketChannel marketChannel,
@@ -43,8 +43,8 @@ namespace STX.Sdk.Console
             ILoggerFactory loggerFactory
             )
         {
-            m_LoginService = loginService;
             m_TokenService = tokenService;
+            m_ViewerService = viewerService;
             m_MarketService = marketService;
             m_OrderService = orderService;
             m_MarketChannel = marketChannel;
@@ -55,17 +55,26 @@ namespace STX.Sdk.Console
             _logger = loggerFactory.CreateLogger("STXWorker");
         }
 
+        /// <summary>
+        /// Learns who the key belongs to, which the channels need.
+        /// </summary>
+        /// <remarks>
+        /// There is no login call with an API key: requests are signed individually. The channels
+        /// are still keyed on the user id for their topic, and with no login response to read it
+        /// from, GetMeAsync is where it comes from. Do this before starting any channel.
+        /// </remarks>
+        private async Task AuthenticateAsync()
+        {
+            var me = await m_ViewerService.GetMeAsync();
+            _logger.LogInformation("Authenticated as {UserId} (scope {Scope})", me.UserId, me.Scope);
+        }
+
         public async Task RunAsync()
         {
             _logger.LogInformation("Starting STX Worker");
             m_SessionBackgroundService.SetSessionMessageAction(SessionMessageReceived);
 
-            STXUserDataCollection userData = await m_LoginService.LoginAsync(
-                    Environment.GetEnvironmentVariable("EMAIL"),
-                    Environment.GetEnvironmentVariable("PASSWORD"),
-                    keepSessionAlive: true);
-
-            STXTokens tokens = m_TokenService.Tokens;
+            await AuthenticateAsync();
 
             // Pull up to 50 markets; the in-memory filter below narrows to
             // open + pre-open so the loop only places orders on markets
