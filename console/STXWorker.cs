@@ -10,7 +10,7 @@ namespace STX.Sdk.Console
     public class STXWorker
     {
         private readonly STXTokenService m_TokenService;
-        private readonly STXViewerService m_ViewerService;
+        private readonly STXIdentityService m_IdentityService;
         private readonly STXMarketService m_MarketService;
         private readonly STXOrderService m_OrderService;
         private readonly STXMarketChannel m_MarketChannel;
@@ -32,7 +32,7 @@ namespace STX.Sdk.Console
 
         public STXWorker(
             STXTokenService tokenService,
-            STXViewerService viewerService,
+            STXIdentityService identityService,
             STXMarketService marketService,
             STXOrderService orderService,
             STXMarketChannel marketChannel,
@@ -44,7 +44,7 @@ namespace STX.Sdk.Console
             )
         {
             m_TokenService = tokenService;
-            m_ViewerService = viewerService;
+            m_IdentityService = identityService;
             m_MarketService = marketService;
             m_OrderService = orderService;
             m_MarketChannel = marketChannel;
@@ -65,7 +65,7 @@ namespace STX.Sdk.Console
         /// </remarks>
         private async Task AuthenticateAsync()
         {
-            var me = await m_ViewerService.GetMeAsync();
+            var me = await m_IdentityService.GetMeAsync();
             _logger.LogInformation("Authenticated as {UserId} (scope {Scope})", me.UserId, me.Scope);
         }
 

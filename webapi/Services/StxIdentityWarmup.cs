@@ -17,12 +17,12 @@ namespace STX.Sdk.Api.Services
     /// </remarks>
     public class StxIdentityWarmup : IHostedService
     {
-        private readonly STXViewerService m_ViewerService;
+        private readonly STXIdentityService m_IdentityService;
         private readonly ILogger<StxIdentityWarmup> m_Logger;
 
-        public StxIdentityWarmup(STXViewerService viewerService, ILogger<StxIdentityWarmup> logger)
+        public StxIdentityWarmup(STXIdentityService identityService, ILogger<StxIdentityWarmup> logger)
         {
-            m_ViewerService = viewerService;
+            m_IdentityService = identityService;
             m_Logger = logger;
         }
 
@@ -34,7 +34,7 @@ namespace STX.Sdk.Api.Services
             // until a later call succeeds.
             try
             {
-                var me = await m_ViewerService.GetMeAsync();
+                var me = await m_IdentityService.GetMeAsync();
                 m_Logger.LogInformation(
                     "Authenticated with API key as {UserId} (scope {Scope})", me.UserId, me.Scope);
             }

@@ -49,7 +49,7 @@ There is no login step. Requests are signed with the API key, and the host resol
 key's identity at startup so user-scoped endpoints know which user to ask about:
 
 ```bash
-curl http://localhost:5088/api/Viewer
+curl http://localhost:5088/api/Identity
 ```
 
 That returns the user id, account id and the key's scope.
@@ -60,7 +60,7 @@ Each controller maps to one SDK surface:
 
 | Controller | What it exposes |
 |---|---|
-| `ViewerController` | Who the key belongs to, and its scope (`/api/Viewer`) |
+| `IdentityController` | Who the key belongs to, and its scope (`/api/Identity`) |
 | `MarketController` | Market listings (`/api/Market` and `/api/Market/generic`) |
 | `OrderController` | Place, cancel, list orders |
 | `PortfolioController` / `SimplePortfolioController` | Portfolio snapshot + live channel |
