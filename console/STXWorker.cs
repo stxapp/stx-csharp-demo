@@ -11,6 +11,7 @@ namespace STX.Sdk.Console
     {
         private readonly STXLoginService m_LoginService;
         private readonly STXTokenService m_TokenService;
+        private readonly STXViewerService m_ViewerService;
         private readonly STXMarketService m_MarketService;
         private readonly STXOrderService m_OrderService;
         private readonly STXMarketChannel m_MarketChannel;
@@ -33,6 +34,7 @@ namespace STX.Sdk.Console
         public STXWorker(
             STXLoginService loginService,
             STXTokenService tokenService,
+            STXViewerService viewerService,
             STXMarketService marketService,
             STXOrderService orderService,
             STXMarketChannel marketChannel,
@@ -45,6 +47,7 @@ namespace STX.Sdk.Console
         {
             m_LoginService = loginService;
             m_TokenService = tokenService;
+            m_ViewerService = viewerService;
             m_MarketService = marketService;
             m_OrderService = orderService;
             m_MarketChannel = marketChannel;
@@ -55,17 +58,46 @@ namespace STX.Sdk.Console
             _logger = loggerFactory.CreateLogger("STXWorker");
         }
 
+        /// <summary>
+        /// Authenticates whichever way the environment is configured, then makes sure the user
+        /// id the channels need is known.
+        /// </summary>
+        /// <remarks>
+        /// With an API key there is no login call: requests are signed individually. The channels
+        /// still need the user id for their topic, and with no login response to read it from,
+        /// GetMeAsync supplies it. Calling LoginAsync on this path would send a null email and
+        /// fail, which is what this sample used to do.
+        /// </remarks>
+        private async Task AuthenticateAsync()
+        {
+            if (StxDemo.StxAuth.UsesApiKey)
+            {
+                var me = await m_ViewerService.GetMeAsync();
+                _logger.LogInformation("Authenticated with API key as {UserId} (scope {Scope})", me.UserId, me.Scope);
+                return;
+            }
+
+            var email = Environment.GetEnvironmentVariable("EMAIL");
+            var password = Environment.GetEnvironmentVariable("PASSWORD");
+
+            if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
+            {
+                throw new InvalidOperationException(
+                    "No credentials found. Set STX_API_KEY_ID and STX_API_KEY_PEM_PATH to use an "
+                    + "API key, which is the recommended path, or EMAIL and PASSWORD to log in. "
+                    + "See the README.");
+            }
+
+            await m_LoginService.LoginAsync(email, password, keepSessionAlive: true);
+            _logger.LogInformation("Authenticated with email and password");
+        }
+
         public async Task RunAsync()
         {
             _logger.LogInformation("Starting STX Worker");
             m_SessionBackgroundService.SetSessionMessageAction(SessionMessageReceived);
 
-            STXUserDataCollection userData = await m_LoginService.LoginAsync(
-                    Environment.GetEnvironmentVariable("EMAIL"),
-                    Environment.GetEnvironmentVariable("PASSWORD"),
-                    keepSessionAlive: true);
-
-            STXTokens tokens = m_TokenService.Tokens;
+            await AuthenticateAsync();
 
             // Pull up to 50 markets; the in-memory filter below narrows to
             // open + pre-open so the loop only places orders on markets
