@@ -12,21 +12,21 @@ namespace STX.Sdk.Api.Controllers
     /// </summary>
     [ApiController]
     [Route("me")]
-    public class ViewerController : ControllerBase
+    public class IdentityController : ControllerBase
     {
-        private readonly STXViewerService _viewerService;
+        private readonly STXIdentityService _identityService;
         private readonly ILogger _logger;
 
         /// <summary>
-        /// Constructor for ViewerController.
+        /// Constructor for IdentityController.
         /// </summary>
-        /// <param name="viewerService">STXViewerService passed through DI container</param>
+        /// <param name="identityService">STXIdentityService passed through DI container</param>
         /// <param name="logger">Logger</param>
-        public ViewerController(
-            STXViewerService viewerService,
-            ILogger<ViewerController> logger)
+        public IdentityController(
+            STXIdentityService identityService,
+            ILogger<IdentityController> logger)
         {
-            _viewerService = viewerService;
+            _identityService = identityService;
             _logger = logger;
         }
 
@@ -35,10 +35,10 @@ namespace STX.Sdk.Api.Controllers
         /// </summary>
         /// <returns>User id, account id, name, auth method and scope</returns>
         [HttpGet]
-        [ProducesResponseType(typeof(STXViewer), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(STXIdentity), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetMe()
         {
-            var result = await _viewerService.GetMeAsync();
+            var result = await _identityService.GetMeAsync();
 
             return Ok(result);
         }
