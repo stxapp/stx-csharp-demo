@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using StxDemo;
+using Microsoft.Extensions.Hosting;
 using STX.Sdk.Console;
 using STX.Sdk;
 using Microsoft.Extensions.DependencyInjection;
@@ -6,9 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices(services =>
     {
-        services.ConfigureSTXServices(
-            (s) => Environment.GetEnvironmentVariable("GRAPHQL_URI"),
-            (s) => Environment.GetEnvironmentVariable("CHANNELS_URI"));
+        // Picks API-key or email/password based on the environment. See shared/StxAuth.cs.
+        services.AddStx();
 
         services.AddSingleton<STXWorker>();
     })
