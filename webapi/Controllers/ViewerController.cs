@@ -18,13 +18,13 @@ namespace STX.Sdk.Api.Controllers
         private readonly ILogger _logger;
 
         /// <summary>
-        /// Constructor for TokenController.
+        /// Constructor for ViewerController.
         /// </summary>
         /// <param name="viewerService">STXViewerService passed through DI container</param>
         /// <param name="logger">Logger</param>
         public ViewerController(
             STXViewerService viewerService,
-            ILogger<LoginController> logger)
+            ILogger<ViewerController> logger)
         {
             _viewerService = viewerService;
             _logger = logger;

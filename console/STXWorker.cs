@@ -9,7 +9,6 @@ namespace STX.Sdk.Console
 {
     public class STXWorker
     {
-        private readonly STXLoginService m_LoginService;
         private readonly STXTokenService m_TokenService;
         private readonly STXViewerService m_ViewerService;
         private readonly STXMarketService m_MarketService;
@@ -32,7 +31,6 @@ namespace STX.Sdk.Console
         private readonly ICollection<STXMarketStatus> _openMarketStatuses = new[] { STXMarketStatus.open, STXMarketStatus.pre_open };
 
         public STXWorker(
-            STXLoginService loginService,
             STXTokenService tokenService,
             STXViewerService viewerService,
             STXMarketService marketService,
@@ -45,7 +43,6 @@ namespace STX.Sdk.Console
             ILoggerFactory loggerFactory
             )
         {
-            m_LoginService = loginService;
             m_TokenService = tokenService;
             m_ViewerService = viewerService;
             m_MarketService = marketService;
@@ -59,37 +56,17 @@ namespace STX.Sdk.Console
         }
 
         /// <summary>
-        /// Authenticates whichever way the environment is configured, then makes sure the user
-        /// id the channels need is known.
+        /// Learns who the key belongs to, which the channels need.
         /// </summary>
         /// <remarks>
-        /// With an API key there is no login call: requests are signed individually. The channels
-        /// still need the user id for their topic, and with no login response to read it from,
-        /// GetMeAsync supplies it. Calling LoginAsync on this path would send a null email and
-        /// fail, which is what this sample used to do.
+        /// There is no login call with an API key: requests are signed individually. The channels
+        /// are still keyed on the user id for their topic, and with no login response to read it
+        /// from, GetMeAsync is where it comes from. Do this before starting any channel.
         /// </remarks>
         private async Task AuthenticateAsync()
         {
-            if (StxDemo.StxAuth.UsesApiKey)
-            {
-                var me = await m_ViewerService.GetMeAsync();
-                _logger.LogInformation("Authenticated with API key as {UserId} (scope {Scope})", me.UserId, me.Scope);
-                return;
-            }
-
-            var email = Environment.GetEnvironmentVariable("EMAIL");
-            var password = Environment.GetEnvironmentVariable("PASSWORD");
-
-            if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
-            {
-                throw new InvalidOperationException(
-                    "No credentials found. Set STX_API_KEY_ID and STX_API_KEY_PEM_PATH to use an "
-                    + "API key, which is the recommended path, or EMAIL and PASSWORD to log in. "
-                    + "See the README.");
-            }
-
-            await m_LoginService.LoginAsync(email, password, keepSessionAlive: true);
-            _logger.LogInformation("Authenticated with email and password");
+            var me = await m_ViewerService.GetMeAsync();
+            _logger.LogInformation("Authenticated as {UserId} (scope {Scope})", me.UserId, me.Scope);
         }
 
         public async Task RunAsync()

@@ -17,7 +17,7 @@ namespace STX.Sdk.Api.Controllers
         private readonly ILogger _logger;
 
         /// <summary>
-        /// Constructor for TokenController.
+        /// Constructor for MarketController.
         /// </summary>
         /// <param name="marketService">STXMarketService passed through DI container</param>
         /// <param name="logger">Logger</param>

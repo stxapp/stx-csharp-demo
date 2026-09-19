@@ -13,11 +13,11 @@ Long-running background worker using `Microsoft.Extensions.Hosting`. Logs in on 
 
 ### 2. Configure credentials + endpoints
 
-The app reads four environment variables. Staging values shown; swap the host for your target env.
+The app reads three environment variables. `STX_ENV` names a published environment, so there are no URLs to assemble.
 
 ```bash
-export EMAIL="you@example.com"
-export PASSWORD="your-password"
+export STX_API_KEY_ID="your-key-id"
+export STX_API_KEY_PEM_PATH="$HOME/.stx/ontario-demo.pem"
 export STX_ENV="ontario-demo"
 ```
 
@@ -32,7 +32,7 @@ for the environment you want and replace the host in both `GRAPHQL_URI` and
 dotnet run
 ```
 
-Expected output on a successful login:
+Expected output once authenticated:
 
 ```
 info: Microsoft.Hosting.Lifetime[0]
@@ -54,8 +54,7 @@ Press `Ctrl+C` to stop.
 | File | What it does |
 |---|---|
 | `Program.cs` | Entry point — wires DI via `ConfigureSTXServices(...)` and adds `STXWorker` as a hosted service. |
-| `STXWorker.cs` | Main loop: login, fetch markets, subscribe to channels, cancel + re-place orders every second. |
-| `LoginController.cs` | Shared login helper used by the worker. |
+| `STXWorker.cs` | Main loop: resolve identity with `GetMeAsync`, fetch markets, subscribe to channels, cancel and re-place orders every second. |
 
 ## Further reading
 

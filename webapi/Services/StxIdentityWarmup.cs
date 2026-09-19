@@ -28,11 +28,6 @@ namespace STX.Sdk.Api.Services
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            if (!StxAuth.UsesApiKey)
-            {
-                return;
-            }
-
             // A throw here would take the whole host down, which is a poor trade for a
             // warmup: the API being briefly unavailable at boot should not stop the app
             // from starting. The user-scoped endpoints fail with their own clear message

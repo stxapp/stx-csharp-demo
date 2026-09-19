@@ -45,28 +45,23 @@ See [`console/README.md`](./console/README.md) and [`webapi/README.md`](./webapi
 
 ## Authentication
 
-Two options, and both samples support either. Set the environment variables for the one you want.
-
-**API key (recommended).** Requests are signed per call with Ed25519. There is no login, no
-token to expire and no refresh cycle, so a restart or an API deployment cannot leave you
-without a session. Create a key under Account, API Keys.
+These samples authenticate with an **API key**. Requests are signed per call with Ed25519:
+there is no login, no token to expire and no refresh cycle, so a restart or an API deployment
+cannot leave you without a session. Create a key under Account, API Keys.
 
 ```bash
 export STX_API_KEY_ID="your-key-id"
-export STX_API_KEY_PEM_PATH="$HOME/.stx/ontario-staging.pem"
-```
-
-**Email and password.** Still fully supported.
-
-```bash
-export EMAIL="you@example.com" PASSWORD="your-password"
+export STX_API_KEY_PEM_PATH="$HOME/.stx/ontario-demo.pem"
 ```
 
 Keep the private key out of source control, and pass a path rather than pasting the key into
 an environment variable so it never lands in your shell history or process list.
 
-Note that `userProfile` is not reachable with an API key, by design: it returns SSN, date of
-birth and address. Use `me` for identity, which is what the `/me` endpoint shows.
+A key is issued with a scope: `read_only` covers market, order, trade and settlement queries,
+while placing or cancelling orders needs `read_write`. `GET /me` reports which one you hold.
+
+Email and password authentication still works in the SDK and is supported for integrations
+already using it. These samples do not show it, so that there is one way to do things here.
 
 ## Environments
 

@@ -19,7 +19,12 @@ Two environment variables are read at startup. Staging values shown:
 export STX_ENV="ontario-demo"
 ```
 
-Credentials are not taken from the environment — this is an API; callers authenticate via the `/api/Login` endpoint (see below).
+The API key is read from the environment at startup:
+
+```bash
+export STX_API_KEY_ID="your-key-id"
+export STX_API_KEY_PEM_PATH="$HOME/.stx/ontario-demo.pem"
+```
 
 ### 3. Run
 
@@ -38,17 +43,16 @@ info: Microsoft.Hosting.Lifetime[0]
 
 Swagger UI is wired up — open `http://localhost:5088/swagger` for an interactive browser.
 
-### 4. Log in
+### 4. Check who you are
 
-POST to `/api/Login` with JSON body:
+There is no login step. Requests are signed with the API key, and the host resolves the
+key's identity at startup so user-scoped endpoints know which user to ask about:
 
 ```bash
-curl -X POST http://localhost:5088/api/Login \
-  -H 'Content-Type: application/json' \
-  -d '{"email": "you@example.com", "password": "your-password"}'
+curl http://localhost:5088/api/Viewer
 ```
 
-The SDK caches the JWT in the service; subsequent calls to other endpoints use it automatically.
+That returns the user id, account id and the key's scope.
 
 ## Endpoints
 
@@ -56,7 +60,7 @@ Each controller maps to one SDK surface:
 
 | Controller | What it exposes |
 |---|---|
-| `LoginController` | Email/password login, 2FA confirm |
+| `ViewerController` | Who the key belongs to, and its scope (`/api/Viewer`) |
 | `MarketController` | Market listings (`/api/Market` and `/api/Market/generic`) |
 | `OrderController` | Place, cancel, list orders |
 | `PortfolioController` / `SimplePortfolioController` | Portfolio snapshot + live channel |

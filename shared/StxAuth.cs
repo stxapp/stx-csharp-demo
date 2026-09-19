@@ -9,33 +9,31 @@ namespace StxDemo
     /// Registers the SDK with whichever environment and credentials the environment supplies.
     /// </summary>
     /// <remarks>
-    /// Two ways to authenticate, and the samples support both so you can compare them.
+    /// These samples authenticate with an API key, which is the recommended path for
+    /// programmatic access. Set STX_API_KEY_ID and STX_API_KEY_PEM_PATH. Requests are signed
+    /// per call with Ed25519: there is no login, no token to expire and no refresh, so a
+    /// restart or an API deployment cannot leave you without a session. Create a key under
+    /// Account, API Keys.
     ///
-    /// <b>API key (recommended).</b> Set STX_API_KEY_ID and STX_API_KEY_PEM_PATH. Requests
-    /// are signed per call with Ed25519. There is no login, no token to expire and no refresh,
-    /// so a restart or an API deployment cannot leave you without a session. Create a key
-    /// under Account, API Keys.
-    ///
-    /// <b>Email and password.</b> Set EMAIL and PASSWORD. Still fully supported.
+    /// Email and password authentication still works in the SDK and is supported for
+    /// integrations already using it, but it is deliberately not shown here. A sample should
+    /// teach one way to do something. See the SDK docs if you are maintaining such an
+    /// integration.
     ///
     /// Keep the private key out of source control and off the command line. Pass a path, as
     /// here, rather than putting the key itself in an environment variable.
     /// </remarks>
     public static class StxAuth
     {
-        public static bool UsesApiKey =>
-            !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("STX_API_KEY_ID"));
-
         public static IServiceCollection AddStx(this IServiceCollection services)
         {
             var environment = ResolveEnvironment();
 
-            if (!UsesApiKey)
-            {
-                return services.ConfigureSTXServices(environment);
-            }
-
-            var keyId = Environment.GetEnvironmentVariable("STX_API_KEY_ID");
+            var keyId = Environment.GetEnvironmentVariable("STX_API_KEY_ID")
+                ?? throw new InvalidOperationException(
+                    "STX_API_KEY_ID is not set. These samples authenticate with an API key: "
+                    + "create one under Account, API Keys, then set STX_API_KEY_ID and "
+                    + "STX_API_KEY_PEM_PATH. See the README.");
             var pemPath = Environment.GetEnvironmentVariable("STX_API_KEY_PEM_PATH")
                 ?? throw new InvalidOperationException(
                     "STX_API_KEY_ID is set but STX_API_KEY_PEM_PATH is not. Point it at the "
