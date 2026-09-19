@@ -90,11 +90,12 @@ namespace STX.Sdk.Api.Controllers
         [ProducesResponseType(typeof(STXMarketInfosWithCountResponse<SimpleMarketInfo>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetMarketsInfoGeneric()
         {
-            var result = await _marketService.GetMarketInfosWithCountAsync<SimpleMarketInfo>();
-
-            result.MarketInfos = result.MarketInfos
-                .Take(50)
-                .ToList();
+            // Limit server-side. Asking for every market and calling Take(50) afterwards
+            // makes the server assemble the whole set first, which times out at the
+            // gateway on a populated environment - and throws away the payload saving
+            // the generic overload exists to give you.
+            var result = await _marketService.GetMarketInfosWithCountAsync<SimpleMarketInfo>(
+                new STXMarketInfosFilter { Limit = 50 });
 
             return Ok(result);
         }

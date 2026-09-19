@@ -33,9 +33,22 @@ namespace STX.Sdk.Api.Services
                 return;
             }
 
-            var me = await m_ViewerService.GetMeAsync();
-            m_Logger.LogInformation(
-                "Authenticated with API key as {UserId} (scope {Scope})", me.UserId, me.Scope);
+            // A throw here would take the whole host down, which is a poor trade for a
+            // warmup: the API being briefly unavailable at boot should not stop the app
+            // from starting. The user-scoped endpoints fail with their own clear message
+            // until a later call succeeds.
+            try
+            {
+                var me = await m_ViewerService.GetMeAsync();
+                m_Logger.LogInformation(
+                    "Authenticated with API key as {UserId} (scope {Scope})", me.UserId, me.Scope);
+            }
+            catch (Exception ex)
+            {
+                m_Logger.LogWarning(ex,
+                    "Could not resolve the API key's user id at startup. User-scoped "
+                    + "endpoints will fail until a call to /me succeeds.");
+            }
         }
 
         public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
