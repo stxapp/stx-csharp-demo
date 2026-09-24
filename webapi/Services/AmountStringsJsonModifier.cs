@@ -38,12 +38,12 @@ namespace STX.Sdk.Api.Services
             {
                 var property = typeInfo.Properties[i];
 
-                if (property.AttributeProvider is not PropertyInfo raw || !IsNumber(raw.PropertyType))
+                if (property.AttributeProvider is not PropertyInfo raw)
                 {
                     continue;
                 }
 
-                Func<object, object> read = CompanionReader(typeInfo.Type, raw);
+                Func<object, object> read = StringReaderFor(typeInfo.Type, raw);
                 if (read is null)
                 {
                     continue;
@@ -57,8 +57,18 @@ namespace STX.Sdk.Api.Services
             }
         }
 
-        private static Func<object, object> CompanionReader(Type type, PropertyInfo raw)
+        /// <summary>
+        /// Reads <paramref name="raw"/> as its string form, or returns null when the field is
+        /// written as it is. <see cref="AmountStringsSchemaFilter"/> uses the same test, so the
+        /// OpenAPI document and the responses agree.
+        /// </summary>
+        public static Func<object, object> StringReaderFor(Type type, PropertyInfo raw)
         {
+            if (!IsNumber(raw.PropertyType))
+            {
+                return null;
+            }
+
             // The companion the SDK (or the model) declares, by its naming convention.
             var baseName = raw.Name.EndsWith("Cents") ? raw.Name[..^"Cents".Length] : raw.Name;
             var companion = type.GetProperty(baseName + "String") ?? type.GetProperty(baseName + "PriceString");

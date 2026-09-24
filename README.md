@@ -90,7 +90,7 @@ Full SDK documentation: [docs.stxapp.io](https://docs.stxapp.io) (preview: the M
 
 ## License
 
-MIT — see [LICENSE](./LICENSE).
+MIT. See [LICENSE](./LICENSE).
 
 ## Contributing
 

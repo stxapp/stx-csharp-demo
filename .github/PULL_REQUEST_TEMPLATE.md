@@ -21,4 +21,4 @@ How did you verify this works?
 
 ## Notes for the reviewer
 
-Anything that isn't obvious from the diff — design choices, follow-ups, known limitations.
+Anything that isn't obvious from the diff: design choices, follow-ups, known limitations.

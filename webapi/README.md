@@ -1,4 +1,4 @@
-# webapi — STX C# SDK ASP.NET Web API sample
+# webapi: STX C# SDK ASP.NET Web API sample
 
 ASP.NET Core 8 Web API that exposes SDK functionality over REST. Controllers for market data, orders, portfolio, positions, trades, settlements, and auth. Channel wrappers (one per Phoenix channel) manage subscriptions lifecycle.
 
@@ -41,7 +41,7 @@ info: Microsoft.Hosting.Lifetime[0]
       Application started. Press Ctrl+C to shut down.
 ```
 
-Swagger UI is wired up — open `http://localhost:5088/swagger` for an interactive browser.
+Swagger UI is wired up: open `http://localhost:5088/swagger` for an interactive browser.
 
 ### 4. Check who you are
 
@@ -77,7 +77,7 @@ Prices, amounts, balances, fees, P&L and quantities are returned as strings, for
 each field with the SDK's `String` companion (`PriceString`, `QuantityString`, ...) under the
 field's own name. Order requests still take `price` in cents and `quantity` as a whole number.
 
-"Simple" variants use the `SimpleXxxChannelWrapper` classes in `Services/` — they buffer incoming channel messages into an in-memory queue so HTTP handlers can pull the latest snapshot on demand.
+"Simple" variants use the `SimpleXxxChannelWrapper` classes in `Services/`. They buffer incoming channel messages into an in-memory queue so HTTP handlers can pull the latest snapshot on demand.
 
 ## Docker
 

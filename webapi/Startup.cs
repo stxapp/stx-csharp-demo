@@ -45,6 +45,9 @@ namespace STX.Sdk.Api
             // Configure swagger.
             services.AddSwaggerGen(doc =>
             {
+                // Document the amount fields as strings, matching what the API returns.
+                doc.SchemaFilter<AmountStringsSchemaFilter>();
+
                 doc.SwaggerDoc("v1", new OpenApiInfo { Title = "STX Test Api", Version = "v1", Description = "STX Sdk Wrapper testing Api" });
 
                 doc.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme

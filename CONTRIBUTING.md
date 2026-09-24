@@ -13,7 +13,7 @@ Thanks for taking the time to improve this demo. These are reference application
 - One problem per issue.
 - Include the exact command you ran + the exact output you got. Copy-paste beats paraphrasing.
 - Mention your OS, `.dotnet --version`, and the `STX.Sdk` version you're on.
-- If you already know the root cause, say so — but don't wait until you do to file.
+- If you already know the root cause, say so, but don't wait until you do to file.
 
 ## Pull requests
 
@@ -37,7 +37,7 @@ Keep diffs small and focused. One concern per PR makes review cheap.
 ## What *not* to submit
 
 - Breaking changes to the shape of these demos without prior agreement (they're public reference; stability matters).
-- Examples that require unreleased or private SDK versions — everything here must work against the latest published `STX.Sdk` on NuGet.
+- Examples that require unreleased or private SDK versions. Everything here must work against the latest published `STX.Sdk` on NuGet.
 - Credentials, tokens, or any real account data in example configs.
 
 ## Code of conduct

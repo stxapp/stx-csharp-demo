@@ -1,4 +1,4 @@
-# console — STX C# SDK worker sample
+# console: STX C# SDK worker sample
 
 Long-running background worker using `Microsoft.Extensions.Hosting`. Logs in on startup, pulls a set of open markets, subscribes to market / orders / trades / portfolio channels, then enters a loop that cancels outstanding orders and places fresh random-price orders on each open market every second.
 
@@ -53,13 +53,13 @@ order still takes the price in cents and a whole number of contracts.
 
 Press `Ctrl+C` to stop.
 
-> **Warning:** `_ordersPerMarketLimit` and `_orderMaxQuantity` in `STXWorker.cs` are conservative demo values, but this code places **real orders** (at random prices!) on whatever env you point it at. Use staging for first runs — don't connect it to production until you've reviewed the logic end-to-end.
+> **Warning:** `_ordersPerMarketLimit` and `_orderMaxQuantity` in `STXWorker.cs` are conservative demo values, but this code places **real orders** (at random prices!) on whatever env you point it at. Use staging for first runs, and don't connect it to production until you've reviewed the logic end-to-end.
 
 ## What's in here
 
 | File | What it does |
 |---|---|
-| `Program.cs` | Entry point — wires DI via `ConfigureSTXServices(...)` and adds `STXWorker` as a hosted service. |
+| `Program.cs` | Entry point: wires DI via `ConfigureSTXServices(...)` and adds `STXWorker` as a hosted service. |
 | `STXWorker.cs` | Main loop: resolve identity with `GetMeAsync`, fetch markets, subscribe to channels, cancel and re-place orders every second. |
 
 ## Further reading
