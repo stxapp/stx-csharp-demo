@@ -42,8 +42,14 @@ info: STXWorker[0]
 Cancelling orders.
 Placing orders on market: mkt_abc123...
 Placing order no. 1 on market: mkt_abc123...
-Order placed: ord_xyz456...
+Order placed: ord_xyz456... BUY 1.00 @ 5.6200 status OPEN, filled 0.00
+Portfolio: balance 1000.0000, available 994.3800, fees 0.0000, settlement P&L 0.0000
 ```
+
+Prices, balances and quantities are logged with the SDK's `String` companions
+(`order.PriceString`, `portfolio.AvailableBalanceString`, `order.QuantityString`): money
+as a dollar string with at least four decimals, quantities with at least two. Placing an
+order still takes the price in cents and a whole number of contracts.
 
 Press `Ctrl+C` to stop.
 

@@ -72,6 +72,11 @@ Each controller maps to one SDK surface:
 | `TokenController` | Token introspection |
 | `WorkerController` | Lifecycle endpoints for the background `STXWorker` |
 
+Prices, amounts, balances, fees, P&L and quantities are returned as strings, for example
+`"price": "0.5600"` and `"quantity": "2.00"`. `Services/AmountStringsJsonModifier.cs` writes
+each field with the SDK's `String` companion (`PriceString`, `QuantityString`, ...) under the
+field's own name. Order requests still take `price` in cents and `quantity` as a whole number.
+
 "Simple" variants use the `SimpleXxxChannelWrapper` classes in `Services/` — they buffer incoming channel messages into an in-memory queue so HTTP handlers can pull the latest snapshot on demand.
 
 ## Docker

@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using STX.Sdk.Channels;
 using STX.Sdk.Data;
 using STX.Sdk.Enums;
@@ -117,6 +116,7 @@ namespace STX.Sdk.Console
 
                         try
                         {
+                            // Order input is cents: a price of 56 is $0.56.
                             STXConfirmedOrder result = await m_OrderService.ConfirmOrderAsync(
                                                 price: _randomGenerator.Next(100, _orderMaxPrice),
                                                 quantity: _randomGenerator.Next(1, _orderMaxQuantity),
@@ -124,13 +124,16 @@ namespace STX.Sdk.Console
                                                 action: STXOrderAction.BUY,
                                                 orderType: STXOrderType.LIMIT);
 
-                            m_PlacedOrderId = result.Order.Id;
+                            STXOrder order = result.Order;
+                            m_PlacedOrderId = order.Id;
 
                             lock (m_Locker)
                             {
+                                // Show what the exchange accepted, read back from the returned order.
                                 System.Console.ForegroundColor = ConsoleColor.Yellow;
-                                System.Console.WriteLine($"Order placed: {m_PlacedOrderId}");
-                                System.Console.WriteLine(JsonConvert.SerializeObject(result));
+                                System.Console.WriteLine(
+                                    $"Order placed: {order.Id} {order.Action} {order.QuantityString} @ {order.PriceString} " +
+                                    $"status {order.Status}, filled {order.FilledString}");
                             }
                         }
                         catch (Exception ex)
@@ -153,8 +156,9 @@ namespace STX.Sdk.Console
             if (portfolio != null)
             {
                 System.Console.ForegroundColor = ConsoleColor.Magenta;
-                System.Console.WriteLine("Portfolio");
-                System.Console.WriteLine(JsonConvert.SerializeObject(portfolio));
+                System.Console.WriteLine(
+                    $"Portfolio: balance {portfolio.AccountBalanceString}, available {portfolio.AvailableBalanceString}, " +
+                    $"fees {portfolio.TotalFeesString}, settlement P&L {portfolio.TotalSettlementPnlString}");
             }
         }
 
@@ -172,19 +176,29 @@ namespace STX.Sdk.Console
                 if (trade is not null)
                 {
                     System.Console.ForegroundColor = ConsoleColor.Green;
-                    System.Console.WriteLine("TRADES");
-                    System.Console.WriteLine(JsonConvert.SerializeObject(trade));
+                    System.Console.WriteLine(
+                        $"Trade {trade.Id} on order {trade.OrderId}: {trade.Action} filled {trade.FilledString} " +
+                        $"@ {trade.PriceString}, premium {trade.PremiumString}");
                 }
             }
         }
 
         private void OrderReceived(STXActiveOrders orders)
         {
+            if (orders?.Orders is null)
+            {
+                return;
+            }
+
             lock (m_Locker)
             {
                 System.Console.ForegroundColor = ConsoleColor.Cyan;
-                System.Console.WriteLine("ORDERS");
-                System.Console.WriteLine(JsonConvert.SerializeObject(orders));
+                foreach (STXActiveOrder order in orders.Orders)
+                {
+                    System.Console.WriteLine(
+                        $"Active order {order.Id}: {order.Action} {order.QuantityString} @ {order.PriceString}, " +
+                        $"filled {order.FilledString} (avg {order.AvgPriceString}), status {order.Status}");
+                }
             }
         }
 

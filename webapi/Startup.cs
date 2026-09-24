@@ -1,6 +1,7 @@
 ﻿using StxDemo;
 using Microsoft.OpenApi.Models;
 using STX.Sdk.Api.Services;
+using System.Text.Json.Serialization.Metadata;
 
 namespace STX.Sdk.Api
 {
@@ -34,7 +35,12 @@ namespace STX.Sdk.Api
 
             services.AddTransient<STXWorker>();
 
-            services.AddControllers();
+            // Prices, amounts and quantities go out as strings ("0.5600", "2.00"), not cents.
+            services.AddControllers().AddJsonOptions(options =>
+                options.JsonSerializerOptions.TypeInfoResolver = new DefaultJsonTypeInfoResolver
+                {
+                    Modifiers = { AmountStringsJsonModifier.Apply }
+                });
 
             // Configure swagger.
             services.AddSwaggerGen(doc =>
