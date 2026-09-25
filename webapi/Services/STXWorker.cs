@@ -35,6 +35,7 @@ namespace STX.Sdk.Api.Services
 
             STXMarketInfo[] baseball = markets.MarketInfos.Where(m => m.Sport == "Baseball").ToArray();
 
+            // Order input is cents: 4000 is $40.00, for 2 contracts.
             STXConfirmedOrder result = await m_OrderService.ConfirmOrderAsync(4000, 2, baseball.First().MarketId.ToString(), STXOrderAction.BUY, STXOrderType.LIMIT);
         }
     }

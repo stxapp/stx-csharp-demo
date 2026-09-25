@@ -76,7 +76,7 @@ jobs:
             if [ "$pinned" = "$latest" ]; then
               echo "ok       $csproj pins $pinned"
             else
-              echo "::error file=$csproj::pins STX.Sdk $pinned but $latest is published. Bump it — a stale pin means these samples demonstrate an SDK our users are not on, and older versions can fail at runtime on data newer ones handle."
+              echo "::error file=$csproj::pins STX.Sdk $pinned but $latest is published. Bump it. A stale pin means these samples demonstrate an SDK our users are not on, and older versions can fail at runtime on data newer ones handle."
               rc=1
             fi
           done < <(find . -name '*.csproj' -not -path './.git/*')

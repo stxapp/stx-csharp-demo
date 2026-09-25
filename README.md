@@ -9,7 +9,7 @@ Two integration patterns, each self-contained in its own folder:
 | [`console/`](./console) | Long-running background worker using `Microsoft.Extensions.Hosting`. Subscribes to channels, reacts to market events, places orders. | Market-maker bots, scheduled jobs, anything that runs 24/7 without HTTP. |
 | [`webapi/`](./webapi) | ASP.NET Core 8 Web API that wraps the SDK behind REST endpoints, with Swagger UI. | Backends, internal tools, any service that needs to expose SDK functionality over HTTP. |
 
-Both projects target **.NET 8** (LTS) and depend on `STX.Sdk 1.6.0` from NuGet. Each has its own README with a full quickstart — this page is the overview.
+Both projects target **.NET 8** (LTS) and depend on `STX.Sdk 1.7.0` from NuGet. Each has its own README with a full quickstart; this page is the overview.
 
 ## Prerequisites
 
@@ -90,7 +90,7 @@ Full SDK documentation: [docs.stxapp.io](https://docs.stxapp.io) (preview: the M
 
 ## License
 
-MIT — see [LICENSE](./LICENSE).
+MIT. See [LICENSE](./LICENSE).
 
 ## Contributing
 
