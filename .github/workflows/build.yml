@@ -22,7 +22,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  DOTNET_VERSION: '8.0.x'
+  DOTNET_VERSION: '10.0.x'
 
 jobs:
   build:
@@ -33,9 +33,9 @@ jobs:
       matrix:
         include:
           - project: console
-            path: console/STXConsoleApp.csproj
+            path: console/StxConsole.csproj
           - project: webapi
-            path: webapi/STX.Sdk.Api.csproj
+            path: webapi/StxWebApi.csproj
     steps:
       - uses: actions/checkout@v4
 
@@ -50,9 +50,8 @@ jobs:
       - name: Build
         run: dotnet build ${{ matrix.path }} --configuration Release --no-restore
 
-  # The pin is what went stale last time: both projects sat on 1.4.2 while the SDK
-  # shipped 1.5.0 and 1.5.1, and 1.4.2 crashes on market results it cannot model.
-  # A build alone would not have caught that, since 1.4.2 still compiles.
+  # A stale pin means these samples show an SDK our users are not on. A build alone
+  # would not catch it, since an older version still compiles.
   sdk-version:
     name: SDK pin is current
     runs-on: ubuntu-latest
@@ -76,7 +75,7 @@ jobs:
             if [ "$pinned" = "$latest" ]; then
               echo "ok       $csproj pins $pinned"
             else
-              echo "::error file=$csproj::pins STX.Sdk $pinned but $latest is published. Bump it — a stale pin means these samples demonstrate an SDK our users are not on, and older versions can fail at runtime on data newer ones handle."
+              echo "::error file=$csproj::pins STX.Sdk $pinned but $latest is published. Bump it: a stale pin means these samples demonstrate an SDK our users are not on, and older versions can fail at runtime on data newer ones handle."
               rc=1
             fi
           done < <(find . -name '*.csproj' -not -path './.git/*')
