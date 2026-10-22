@@ -59,7 +59,7 @@ See [`console/README.md`](./console/README.md) and [`webapi/README.md`](./webapi
 
 ## Docs
 
-The SDK guide is at [docs.stxapp.io/sdks/csharp](https://docs.stxapp.io/sdks/csharp/overview/).
+The SDK guide is at [docs.stxapp.io/sdks/csharp](https://docs.stxapp.io/sdks/csharp/).
 
 ## License
 
