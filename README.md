@@ -1,96 +1,69 @@
 # stx-csharp-demo
 
-Reference applications for the **STX C# SDK** ([`STX.Sdk`](https://www.nuget.org/packages/STX.Sdk) on NuGet).
-
-Two integration patterns, each self-contained in its own folder:
+Example applications for the STX C# SDK ([`STX.Sdk`](https://www.nuget.org/packages/STX.Sdk) on NuGet), each self-contained in its own folder:
 
 | Folder | Shape | Good for |
 |---|---|---|
-| [`console/`](./console) | Long-running background worker using `Microsoft.Extensions.Hosting`. Subscribes to channels, reacts to market events, places orders. | Market-maker bots, scheduled jobs, anything that runs 24/7 without HTTP. |
-| [`webapi/`](./webapi) | ASP.NET Core 8 Web API that wraps the SDK behind REST endpoints, with Swagger UI. | Backends, internal tools, any service that needs to expose SDK functionality over HTTP. |
+| [`console/`](./console) | A worker service (`Microsoft.Extensions.Hosting`) that streams order books and your account, and can rest a 1-cent bid protected by cancel-on-disconnect. | Bots, automated strategies, anything that runs without HTTP. |
+| [`webapi/`](./webapi) | An ASP.NET Core minimal API in front of the SDK: markets, your live account, place and cancel orders. | Backends and internal tools that expose the exchange over HTTP. |
 
-Both projects target **.NET 8** (LTS) and depend on `STX.Sdk 1.6.0` from NuGet. Each has its own README with a full quickstart — this page is the overview.
+Both target .NET 10 and use `STX.Sdk` 2.
 
 ## Prerequisites
 
-- [.NET SDK 8.0](https://dotnet.microsoft.com/download/dotnet/8.0) or newer
-- An STX account on the environment you plan to target, and an API key from Account, API Keys.
-  The samples default to the Ontario demo environment, which uses no real money.
+- [.NET SDK 10](https://dotnet.microsoft.com/download/dotnet/10.0)
+- An account on the STX exchange you plan to use, and an API key from it. Start on a demo exchange, which uses no real money. [Environments](https://docs.stxapp.io/environments/) lists them.
 
-## 60-second quickstart
+## Your API key
 
-Pick the pattern you want and jump into its folder:
+Save the key's private key as `~/.stx/stx-key.pem` and add a profile to `~/.stx/credentials`:
+
+```ini
+[default]
+region   = ontario
+env      = demo
+key_id   = your-key-id
+key_file = ~/.stx/stx-key.pem
+```
+
+`region` and `env` pick the exchange: `us`/`demo`, `ontario`/`demo` or `ontario`/`production`. Both apps read this profile, or the one named in `STX_PROFILE`. `STX_REGION`, `STX_ENV`, `STX_KEY_ID` and `STX_PRIVATE_KEY` (a path, or the PEM text) override it, so the apps also run with no credentials file. [Authentication](https://docs.stxapp.io/sdks/csharp/authentication) has the details.
+
+Keep the private key out of source control. A key is `read_only` or `read_write`; placing and cancelling orders needs `read_write`.
+
+## Quickstart
 
 ```bash
-# Console worker
 cd console
-export STX_API_KEY_ID="your-key-id"
-export STX_API_KEY_PEM_PATH="$HOME/.stx/ontario-demo.pem"
-export STX_ENV="ontario-demo"
-dotnet run
+dotnet run -- --once --quote
 ```
 
-The console worker cancels your resting orders and places new ones, so point it at a
-demo environment until you have read what it does.
+```text
+Exchange demo.stxapp.ca: key 998bc79d2e3731a3489a004105736353, user ef28f25f-8119-483d-8a70-faf081056f4c, scope read_write
+AHC_2602051410__1 bid 16.0000 offer 24.0000
+AHC_2602051415__1 bid 34.0000 offer 40.0000
+Book 49517949-3cb4-46d8-afe7-3fe87987a48a: best bid 34.0000
+Account: available 1999809.2400, 0 open orders, 2 positions
+Cancel-on-disconnect armed, timeout 5000 ms
+Placed 6567da71-ec9c-48ef-b1ba-2e2b8d11dc42 on STX13AUG226NOLANBESTMOVIE-13AUG226NOLANBESTMOVIE-BAT: accepted 1.00 @ 0.0100
+Account orders (new_open_order)
+Cancelled 6567da71-ec9c-48ef-b1ba-2e2b8d11dc42: cancelled
+```
 
 ```bash
-# Web API (in a different shell)
 cd webapi
-export STX_ENV="ontario-demo"
 dotnet run
-# Open http://localhost:5088/swagger for the UI
+# then: curl http://localhost:5088/markets
 ```
 
-See [`console/README.md`](./console/README.md) and [`webapi/README.md`](./webapi/README.md) for the full per-project quickstarts, host tables for other envs, and notes on what each sample does.
-
-## Authentication
-
-These samples authenticate with an **API key**. Requests are signed per call with Ed25519:
-there is no login, no token to expire and no refresh cycle, so a restart or an API deployment
-cannot leave you without a session. Create a key under Account, API Keys.
-
-```bash
-export STX_API_KEY_ID="your-key-id"
-export STX_API_KEY_PEM_PATH="$HOME/.stx/ontario-demo.pem"
-```
-
-Keep the private key out of source control, and pass a path rather than pasting the key into
-an environment variable so it never lands in your shell history or process list.
-
-A key is issued with a scope: `read_only` covers market, order, trade and settlement queries,
-while placing or cancelling orders needs `read_write`. `GET /me` reports which one you hold.
-
-Email and password authentication still works in the SDK and is supported for integrations
-already using it. These samples do not show it, so that there is one way to do things here.
-
-## Environments
-
-The SDK carries the hosts, so there are no URLs to assemble. Pick one with `STX_ENV`:
-
-| `STX_ENV` | |
-|---|---|
-| `ontario-demo` (default) | Ontario, no real money |
-| `ontario-production` | Ontario, **live money** |
-| `us-demo` | United States, no real money |
-
-```bash
-export STX_ENV="ontario-demo"
-```
-
-Accounts and API keys do not carry across exchanges: a key issued for Ontario will not
-authenticate against the US exchange. The canonical host list, if you need it, is at
-[docs.stxapp.io/environments](https://docs.stxapp.io/environments/).
-
-To point a sample somewhere the SDK does not name, set `GRAPHQL_URI` and `CHANNELS_URI`
-instead and they take precedence.
+See [`console/README.md`](./console/README.md) and [`webapi/README.md`](./webapi/README.md) for what each app does.
 
 ## Docs
 
-Full SDK documentation: [docs.stxapp.io](https://docs.stxapp.io) (preview: the Mintlify URL). Start with the [C# quickstart](https://docs.stxapp.io/sdks/csharp/quickstart).
+The SDK guide is at [docs.stxapp.io/sdks/csharp](https://docs.stxapp.io/sdks/csharp/).
 
 ## License
 
-MIT — see [LICENSE](./LICENSE). Use of the STX API and exchange is subject to the STX terms of use and privacy policy: United States ([terms of use](https://stxapp.io/legal/terms-of-use.pdf), [privacy policy](https://stxapp.io/legal/privacy-policy.pdf)), Ontario ([terms of use](https://stxapp.ca/legal/terms-of-use.pdf), [privacy policy](https://stxapp.ca/legal/privacy-policy.pdf)).
+MIT, see [LICENSE](./LICENSE). Use of the STX API and exchange is subject to the STX terms of use and privacy policy: United States ([terms of use](https://stxapp.io/legal/terms-of-use.pdf), [privacy policy](https://stxapp.io/legal/privacy-policy.pdf)), Ontario ([terms of use](https://stxapp.ca/legal/terms-of-use.pdf), [privacy policy](https://stxapp.ca/legal/privacy-policy.pdf)).
 
 ## Contributing
 

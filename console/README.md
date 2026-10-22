@@ -1,67 +1,28 @@
-# console — STX C# SDK worker sample
+# console: a worker on STX.Sdk
 
-Long-running background worker using `Microsoft.Extensions.Hosting`. Logs in on startup, pulls a set of open markets, subscribes to market / orders / trades / portfolio channels, then enters a loop that cancels outstanding orders and places fresh random-price orders on each open market every second.
+A worker service built on `Microsoft.Extensions.Hosting`. On start it:
 
-**Use as a starting point for:** market-maker bots, automated strategies, scheduled jobs, or anything that runs without HTTP.
+1. checks the API key (`GetMeAsync`),
+2. lists three open markets with their best bid and offer,
+3. opens one socket, streams the order books of those markets, and keeps a live copy of your account (balance, open orders, fills, positions) with `AccountViewAsync`,
+4. with `--quote`, arms cancel-on-disconnect on a second socket and rests a 1-cent bid on a market whose event has not started. If the process dies or loses its connection, the exchange cancels that order. On shutdown the worker cancels it itself.
 
-## Quickstart
+## Run
 
-### 1. Prereqs
-
-- [.NET SDK 8.0](https://dotnet.microsoft.com/download/dotnet/8.0) or newer
-- An STX account on the environment you plan to target
-
-### 2. Configure credentials + endpoints
-
-The app reads three environment variables. `STX_ENV` names a published environment, so there are no URLs to assemble.
+Set up your key as in the [main README](../README.md), then:
 
 ```bash
-export STX_API_KEY_ID="your-key-id"
-export STX_API_KEY_PEM_PATH="$HOME/.stx/ontario-demo.pem"
-export STX_ENV="ontario-demo"
+dotnet run                         # stream until Ctrl+C
+dotnet run -- --quote              # also rest a 1-cent bid while running
+dotnet run -- --once --quote       # one pass: place, check, cancel, exit
+dotnet run -- --profile my-demo    # a named profile from ~/.stx/credentials
 ```
 
-Other environments: the canonical host list lives at
-[docs.stxapp.io/environments](https://docs.stxapp.io/environments/). Take the base URL
-for the environment you want and replace the host in both `GRAPHQL_URI` and
-`CHANNELS_URI`.
+On production a 1-cent order uses real money, even though it rests below the market and is cancelled when the worker stops.
 
-### 3. Run
+## Where to look
 
-```bash
-dotnet run
-```
+- `Program.cs`: the host and the command-line flags.
+- `Worker.cs`: everything that talks to the exchange.
 
-Expected output once authenticated:
-
-```
-info: Microsoft.Hosting.Lifetime[0]
-      Application started. Press Ctrl+C to shut down.
-info: STXWorker[0]
-      Starting STX Worker
-Cancelling orders.
-Placing orders on market: mkt_abc123...
-Placing order no. 1 on market: mkt_abc123...
-Order placed: ord_xyz456...
-```
-
-Press `Ctrl+C` to stop.
-
-> **Warning:** `_ordersPerMarketLimit` and `_orderMaxQuantity` in `STXWorker.cs` are conservative demo values, but this code places **real orders** (at random prices!) on whatever env you point it at. Use staging for first runs — don't connect it to production until you've reviewed the logic end-to-end.
-
-## What's in here
-
-| File | What it does |
-|---|---|
-| `Program.cs` | Entry point — wires DI via `ConfigureSTXServices(...)` and adds `STXWorker` as a hosted service. |
-| `STXWorker.cs` | Main loop: resolve identity with `GetMeAsync`, fetch markets, subscribe to channels, cancel and re-place orders every second. |
-
-## Further reading
-
-Full SDK reference lives at the docs site:
-
-- [C# quickstart](https://docs.stxapp.io/sdks/csharp/quickstart)
-- [Authentication](https://docs.stxapp.io/sdks/csharp/authentication)
-- [Market data](https://docs.stxapp.io/sdks/csharp/markets)
-- [Trading](https://docs.stxapp.io/sdks/csharp/trading)
-- [WebSockets](https://docs.stxapp.io/sdks/csharp/websockets)
+The [WebSockets guide](https://docs.stxapp.io/sdks/csharp/websockets/) covers the channels, the account view and reconnects; [Trading](https://docs.stxapp.io/sdks/csharp/trading/) covers orders and cancel-on-disconnect.

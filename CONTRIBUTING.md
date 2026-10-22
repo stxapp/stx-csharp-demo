@@ -26,10 +26,9 @@ Before opening a PR:
 dotnet build console/
 dotnet build webapi/
 
-# If your change affects a sample, run it against a demo environment once:
-export STX_ENV=ontario-demo
-export STX_API_KEY_ID=... STX_API_KEY_PEM_PATH=~/.stx/ontario.pem   # or EMAIL=... PASSWORD=...
-cd console && dotnet run    # or: cd webapi && dotnet run
+# If your change affects a sample, run it against a demo exchange once,
+# with a demo profile in ~/.stx/credentials (see README.md):
+cd console && dotnet run -- --once --quote    # or: cd webapi && dotnet run
 ```
 
 Keep diffs small and focused. One concern per PR makes review cheap.
@@ -37,7 +36,7 @@ Keep diffs small and focused. One concern per PR makes review cheap.
 ## What *not* to submit
 
 - Breaking changes to the shape of these demos without prior agreement (they're public reference; stability matters).
-- Examples that require unreleased or private SDK versions — everything here must work against the latest published `STX.Sdk` on NuGet.
+- Examples that require unreleased or private SDK versions: everything here must work against the latest published `STX.Sdk` on NuGet.
 - Credentials, tokens, or any real account data in example configs.
 
 ## Code of conduct

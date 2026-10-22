@@ -16,7 +16,7 @@ How did you verify this works?
 
 - [ ] `dotnet build console/` clean
 - [ ] `dotnet build webapi/` clean
-- [ ] Ran the affected sample end-to-end against staging
+- [ ] Ran the affected sample end-to-end against a demo exchange
 - [ ] Other:
 
 ## Notes for the reviewer

@@ -1,21 +1,21 @@
-﻿using StxDemo;
-using Microsoft.Extensions.Hosting;
-using STX.Sdk.Console;
-using STX.Sdk;
-using Microsoft.Extensions.DependencyInjection;
+// A long-running worker on STX.Sdk: it streams the order book of a few markets and keeps a live
+// copy of your account, and with --quote it rests a 1-cent bid protected by cancel-on-disconnect.
+//
+//   dotnet run                          # stream until Ctrl+C
+//   dotnet run -- --quote               # also rest a 1-cent bid while running
+//   dotnet run -- --once --quote        # one pass: place, check, cancel, exit
+//
+// The API key comes from ~/.stx/credentials or STX_* environment variables; see README.md.
 
-IHost host = Host.CreateDefaultBuilder(args)
-    .ConfigureServices(services =>
-    {
-        // Picks API-key or email/password based on the environment. See shared/StxAuth.cs.
-        services.AddStx();
+using StxConsole;
 
-        services.AddSingleton<STXWorker>();
-    })
-    .Build();
+var builder = Host.CreateApplicationBuilder(args);
+builder.Services.AddSingleton(new WorkerOptions(Quote: args.Contains("--quote"), Once: args.Contains("--once"), Profile: ProfileArg(args)));
+builder.Services.AddHostedService<Worker>();
+await builder.Build().RunAsync();
 
-var _ = host.RunAsync(); //this is needed in order to run background services
-
-var stx = host.Services.GetService<STXWorker>();
-
-await stx.RunAsync();
+static string? ProfileArg(string[] args)
+{
+    var i = Array.IndexOf(args, "--profile");
+    return i >= 0 && i + 1 < args.Length ? args[i + 1] : null;
+}
