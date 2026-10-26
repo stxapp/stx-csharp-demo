@@ -36,6 +36,8 @@ jobs:
             path: console/StxConsole.csproj
           - project: webapi
             path: webapi/StxWebApi.csproj
+          - project: combo-maker
+            path: combo-maker/ComboMaker.csproj
     steps:
       - uses: actions/checkout@v4
 
