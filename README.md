@@ -6,8 +6,9 @@ Example applications for the STX C# SDK ([`STX.Sdk`](https://www.nuget.org/packa
 |---|---|---|
 | [`console/`](./console) | A worker service (`Microsoft.Extensions.Hosting`) that streams order books and your account, and can rest a 1-cent bid protected by cancel-on-disconnect. | Bots, automated strategies, anything that runs without HTTP. |
 | [`webapi/`](./webapi) | An ASP.NET Core minimal API in front of the SDK: markets, your live account, place and cancel orders. | Backends and internal tools that expose the exchange over HTTP. |
+| [`combo-maker/`](./combo-maker) | A console program that quotes every combo request as a maker and reports how each one ends. Combos run on the US demo and Ontario demo exchanges. | Market makers quoting combos. |
 
-Both target .NET 10 and use `STX.Sdk` 2.
+All three target .NET 10 and use `STX.Sdk` 2.
 
 ## Prerequisites
 
@@ -26,7 +27,7 @@ key_id   = your-key-id
 key_file = ~/.stx/stx-key.pem
 ```
 
-`region` and `env` pick the exchange: `us`/`demo`, `ontario`/`demo` or `ontario`/`production`. Both apps read this profile, or the one named in `STX_PROFILE`. `STX_REGION`, `STX_ENV`, `STX_KEY_ID` and `STX_PRIVATE_KEY` (a path, or the PEM text) override it, so the apps also run with no credentials file. [Authentication](https://docs.stxapp.io/sdks/csharp/authentication) has the details.
+`region` and `env` pick the exchange: `us`/`demo`, `ontario`/`demo` or `ontario`/`production`. The apps read this profile, or the one named in `STX_PROFILE`. `STX_REGION`, `STX_ENV`, `STX_KEY_ID` and `STX_PRIVATE_KEY` (a path, or the PEM text) override it, so the apps also run with no credentials file. [Authentication](https://docs.stxapp.io/sdks/csharp/authentication) has the details.
 
 Keep the private key out of source control. A key is `read_only` or `read_write`; placing and cancelling orders needs `read_write`.
 
@@ -55,7 +56,12 @@ dotnet run
 # then: curl http://localhost:5088/markets
 ```
 
-See [`console/README.md`](./console/README.md) and [`webapi/README.md`](./webapi/README.md) for what each app does.
+```bash
+cd combo-maker
+dotnet run
+```
+
+See [`console/README.md`](./console/README.md), [`webapi/README.md`](./webapi/README.md) and [`combo-maker/README.md`](./combo-maker/README.md) for what each app does.
 
 ## Docs
 

@@ -22,9 +22,10 @@ Happy to take them. Before you start a large change, open an issue first so we c
 Before opening a PR:
 
 ```bash
-# Both projects should build clean.
+# Every project should build clean.
 dotnet build console/
 dotnet build webapi/
+dotnet build combo-maker/
 
 # If your change affects a sample, run it against a demo exchange once,
 # with a demo profile in ~/.stx/credentials (see README.md):
