@@ -1,6 +1,6 @@
 # combo-maker: quote combos as a maker on STX.Sdk
 
-A console program that joins the `combo_quote` channel as a maker and quotes every combo request on the exchange until you press Ctrl+C, printing how each one ends. Combos run on the US demo and Ontario demo exchanges, and quoting needs a `read_write` API key.
+A console program that joins the `combo_quote` channel as a maker and quotes every combo request on the exchange until you press Ctrl+C, printing how each one ends. Quoting needs a `read_write` API key.
 
 1. Each request arrives as `RfqOpened`, from every player on the exchange.
 2. On a buy, the program quotes what the player wins: the stake times `--win-multiple` (default `9`). On a cash out, it quotes what you pay for everything the player sells: `--cash-out-price` a contract (default `0.08`). Each quote stands for `--quote-seconds` (default `30`). It first checks that the amount prices inside the request's `MaxPrice` and `TickSize`, and skips the request if not.
@@ -48,7 +48,7 @@ With `--win-multiple 3 --cash-out-price 0.02`, another maker quoted the player m
 [closed]   dcd038c5  placed
 ```
 
-A quote can also end `[expired]`, when its time runs out and a later quote on the request replaces it, or with the request's own reason, such as `cancelled`. Other makers quote on the demo exchanges too, so expect to lose some requests. A request your own account opened is refused with `cannot_quote_own_request`. Every socket joined as one account gets the pushes about all of that account's quotes, so run one maker per account. Quotes belong to the connection that placed them: on Ctrl+C, or if the connection drops, they are withdrawn.
+A quote can also end `[expired]`, when its time runs out and a later quote on the request replaces it, or with the request's own reason, such as `cancelled`. Other makers quote too, so expect to lose some requests. A request your own account opened is refused with `cannot_quote_own_request`. Every socket joined as one account gets the pushes about all of that account's quotes, so run one maker per account. Quotes belong to the connection that placed them: on Ctrl+C, or if the connection drops, they are withdrawn.
 
 ## Where to look
 

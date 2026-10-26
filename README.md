@@ -6,7 +6,7 @@ Example applications for the STX C# SDK ([`STX.Sdk`](https://www.nuget.org/packa
 |---|---|---|
 | [`console/`](./console) | A worker service (`Microsoft.Extensions.Hosting`) that streams order books and your account, and can rest a 1-cent bid protected by cancel-on-disconnect. | Bots, automated strategies, anything that runs without HTTP. |
 | [`webapi/`](./webapi) | An ASP.NET Core minimal API in front of the SDK: markets, your live account, place and cancel orders. | Backends and internal tools that expose the exchange over HTTP. |
-| [`combo-maker/`](./combo-maker) | A console program that quotes every combo request as a maker and reports how each one ends. Combos run on the US demo and Ontario demo exchanges. | Market makers quoting combos. |
+| [`combo-maker/`](./combo-maker) | A console program that quotes every combo request as a maker and reports how each one ends. | Market makers quoting combos. |
 
 All three target .NET 10 and use `STX.Sdk` 2.
 

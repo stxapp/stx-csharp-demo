@@ -4,7 +4,7 @@
 // out. Every maker joined to its combo_quote channel receives each request. This program quotes all
 // of them and prints what happens next: your quote placed (quote_accepted, then placed), another
 // maker's placed instead (placed_elsewhere), your quote expiring, and the request closing. It needs
-// a read_write API key. Combos run on the US demo and Ontario demo exchanges.
+// a read_write API key.
 //
 //   dotnet run                                        # quote until Ctrl+C
 //   dotnet run -- --seconds 120                       # stop after 120 s
@@ -48,7 +48,7 @@ try
 }
 catch (STXCombosUnavailableException)
 {
-    Console.WriteLine($"Combos are not available on {client.Host}. They run on the US demo and Ontario demo exchanges.");
+    Console.WriteLine($"Combos are not available on {client.Host}.");
     return 1;
 }
 
