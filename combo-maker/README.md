@@ -15,7 +15,10 @@ dotnet run                                                   # quote until Ctrl+
 dotnet run -- --seconds 120                                  # stop after 120 s
 dotnet run -- --win-multiple 12 --cash-out-price 0.10 --quote-seconds 60
 dotnet run -- --profile my-demo                              # a named profile from ~/.stx/credentials
+dotnet run -- --player <external_id>                         # quote only that player's requests
 ```
+
+`--player` takes the pseudonym a player's requests carry (`ExternalId` on `RfqOpened`, which [`combos/`](../combos) prints with `--player-id`), so you can quote just one player, for example your own test account.
 
 This run, on the Ontario demo exchange with `--win-multiple 15 --cash-out-price 0.12`, quoted a buy and then the player's cash out of the same combo, and won both:
 

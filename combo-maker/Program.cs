@@ -10,6 +10,7 @@
 //   dotnet run -- --seconds 120                       # stop after 120 s
 //   dotnet run -- --win-multiple 12 --cash-out-price 0.10 --quote-seconds 60
 //   dotnet run -- --profile my-demo                   # a named profile from ~/.stx/credentials
+//   dotnet run -- --player <external_id>              # quote only that player's requests
 //
 // On a buy you quote what the player wins: the stake times --win-multiple (default 9). On a cash
 // out you quote what you pay for everything the player sells: --cash-out-price a contract (default
@@ -22,6 +23,8 @@ using STX.Sdk.Combos;
 var winMultiple = decimal.Parse(Arg("--win-multiple") ?? "9", CultureInfo.InvariantCulture);
 var cashOutPrice = decimal.Parse(Arg("--cash-out-price") ?? "0.08", CultureInfo.InvariantCulture);
 var quoteMs = (int)(double.Parse(Arg("--quote-seconds") ?? "30", CultureInfo.InvariantCulture) * 1000);
+// The external_id a player's requests carry; when set, other players' requests are ignored.
+var player = Arg("--player");
 var runSeconds = Arg("--seconds") is { } s ? double.Parse(s, CultureInfo.InvariantCulture) : (double?)null;
 
 // Ctrl+C, or --seconds running out, ends the run.
@@ -64,6 +67,7 @@ try
         {
             case RfqOpened request:
                 // Every request opened after the join, from every player, your own included.
+                if (player is not null && request.ExternalId != player) break;
                 Console.WriteLine($"[request]  {Short(request.RfqId)}  {Describe(request)}");
                 await QuoteAsync(request);
                 break;

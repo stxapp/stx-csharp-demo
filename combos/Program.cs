@@ -10,6 +10,7 @@
 //   dotnet run -- --wait 60                     # wait up to 60 s for a first quote
 //   dotnet run -- --sport Football              # legs from one sport
 //   dotnet run -- --profile my-demo             # a named profile from ~/.stx/credentials
+//   dotnet run -- --player-id                   # print the pseudonym makers see on your requests, and exit
 //
 // Makers answer at their own pace, so once the first quote is live the program keeps listening
 // for --gather seconds (default 3) and then takes the best quote standing, at its exact amount.
@@ -41,6 +42,12 @@ await using (var ws = client.CreateWebSocket())
     {
         Console.WriteLine($"Combos are not available on {client.Host}.");
         return 1;
+    }
+    if (args.Contains("--player-id"))
+    {
+        // Makers see this pseudonym (external_id) on your requests, never your account.
+        Console.WriteLine($"Player: {rfq.JoinReply.ExternalId}");
+        return 0;
     }
 
     // 2. The legs: open markets from different events that start at least two hours from now.
