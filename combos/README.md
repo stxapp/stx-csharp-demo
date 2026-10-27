@@ -18,6 +18,7 @@ dotnet run -- --stake 2.50 --legs 3         # a 2.50 stake on three legs
 dotnet run -- --wait 60                     # wait up to 60 s for a first quote
 dotnet run -- --sport Football              # legs from one sport
 dotnet run -- --profile my-demo             # a named profile from ~/.stx/credentials
+dotnet run -- --player-id                   # print the pseudonym makers see on your requests, and exit
 ```
 
 Each line it prints:
@@ -32,6 +33,6 @@ Sold:    <quantity> @ <price>  order <order_id>  quote <quote_id>
 Final:   position 0.00 on the combo  open orders 0
 ```
 
-Run [`combo-maker/`](../combo-maker) beside it, as a different account, to quote your own requests. A request your own account opened cannot be quoted by that account.
+Run [`combo-maker/`](../combo-maker) beside it, as a different account, to quote your own requests; `--player` with the `--player-id` value keeps it to yours. A request your own account opened cannot be quoted by that account.
 
 [Combos](https://docs.stxapp.io/sdks/csharp/combos/) covers the SDK calls, and [Combo negotiation](https://docs.stxapp.io/websockets/channels/combo-negotiation/) documents each frame.

@@ -8,8 +8,8 @@ name: Live
 #
 # .github/scripts/combos-live.sh checks that combo-maker quoted the request and
 # that its quote was the one placed, and that combos/ bought, sold and holds
-# nothing at the end. Other makers quote on the demo exchanges too, so
-# combo-maker quotes generously enough to lead.
+# nothing at the end. combo-maker quotes only that player's requests, and
+# generously enough to lead the other makers on the demo exchanges.
 #
 # Needs these repository secrets (read_write API keys, the PEM as text):
 #   US_DEMO_API_KEY_ID, US_DEMO_API_KEY_PEM                    the player (combos/)

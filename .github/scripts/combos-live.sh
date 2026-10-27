@@ -9,9 +9,9 @@
 #
 # Checked: combo-maker quoted the request and its quote was the one placed
 # (`[won]` for that request: the placed push reaches only the winning maker),
-# and combos/ bought, sold and holds nothing at the end. Another maker can still
-# match the quote first (another run's maker, say), so a buy placed elsewhere is
-# tried once more with a new request. Winning the cash out too is reported, not
+# and combos/ bought, sold and holds nothing at the end. combo-maker quotes only
+# this player's requests (--player). Another maker can still quote higher, so a
+# buy placed elsewhere is tried once more with a new request. Winning the cash out too is reported, not
 # required.
 set -eo pipefail
 # Job control, so combo-maker in the background still takes SIGINT and stops cleanly.
@@ -19,9 +19,12 @@ set -m
 name=$1
 log=maker.txt
 
+# The maker quotes only this run's player, so it never trades with another run.
+player=$(dotnet combos/bin/Release/net10.0/Combos.dll --player-id | awk '/^Player:/ { print $2 }')
+[ -n "$player" ] || { echo "::error::combos printed no player id on $name"; exit 1; }
 STX_KEY_ID="$MAKER_KEY_ID" STX_PRIVATE_KEY="$MAKER_KEY_PEM" \
-  dotnet combo-maker/bin/Release/net10.0/ComboMaker.dll \
-  --seconds 300 --win-multiple 20 --cash-out-price 0.50 --quote-seconds 30 > "$log" 2>&1 &
+  dotnet combo-maker/bin/Release/net10.0/ComboMaker.dll --player "$player" \
+  --seconds 300 --win-multiple 12 --cash-out-price 0.40 --quote-seconds 30 > "$log" 2>&1 &
 pid=$!
 for _ in $(seq 1 60); do grep -q '^Quoting combos on ' "$log" && break; sleep 0.5; done
 grep -q '^Quoting combos on ' "$log" || { cat "$log"; echo "::error::combo-maker did not join combo_quote on $name"; exit 1; }
