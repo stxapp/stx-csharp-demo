@@ -1,8 +1,7 @@
 name: Build
 
-# These samples have no credentials in CI, so this builds them rather than running
-# them. That is enough to catch the failure mode this repo actually has: the pinned
-# STX.Sdk version going stale or breaking against a newer SDK.
+# Builds every sample, catching the pinned STX.Sdk version going stale or breaking
+# against a newer SDK. live.yml runs the combo samples against the demo exchanges.
 on:
   workflow_dispatch:
   pull_request:
@@ -38,6 +37,8 @@ jobs:
             path: webapi/StxWebApi.csproj
           - project: combo-maker
             path: combo-maker/ComboMaker.csproj
+          - project: combos
+            path: combos/Combos.csproj
     steps:
       - uses: actions/checkout@v4
 
