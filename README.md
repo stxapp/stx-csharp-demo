@@ -8,8 +8,9 @@ Example applications for the STX C# SDK ([`STX.Sdk`](https://www.nuget.org/packa
 | [`webapi/`](./webapi) | An ASP.NET Core minimal API in front of the SDK: markets, your live account, place and cancel orders. | Backends and internal tools that expose the exchange over HTTP. |
 | [`combo-maker/`](./combo-maker) | A console program that quotes every combo request as a maker and reports how each one ends. | Market makers quoting combos. |
 | [`combos/`](./combos) | A console program that buys a small combo from the best maker quote and cashes it out. | Players and apps that offer combos. |
+| [`fill-modes/`](./fill-modes) | A console program that places post-only and fill-or-kill orders and shows what the exchange does with each. | Makers who must never take, and orders that must fill in full or not at all. |
 
-All four target .NET 10 and use `STX.Sdk` 2.
+All five target .NET 10 and use `STX.Sdk` 2.
 
 ## Prerequisites
 
@@ -67,7 +68,12 @@ cd combos
 dotnet run
 ```
 
-See [`console/README.md`](./console/README.md), [`webapi/README.md`](./webapi/README.md), [`combo-maker/README.md`](./combo-maker/README.md) and [`combos/README.md`](./combos/README.md) for what each app does.
+```bash
+cd fill-modes
+dotnet run
+```
+
+See [`console/README.md`](./console/README.md), [`webapi/README.md`](./webapi/README.md), [`combo-maker/README.md`](./combo-maker/README.md), [`combos/README.md`](./combos/README.md) and [`fill-modes/README.md`](./fill-modes/README.md) for what each app does.
 
 ## Docs
 
