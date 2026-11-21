@@ -39,6 +39,8 @@ jobs:
             path: combo-maker/ComboMaker.csproj
           - project: combos
             path: combos/Combos.csproj
+          - project: fill-modes
+            path: fill-modes/FillModes.csproj
     steps:
       - uses: actions/checkout@v4
 
